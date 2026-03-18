@@ -80,8 +80,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .imc2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
 .imcc{background:#f5f5f3;border-radius:8px;padding:10px;text-align:center}
 .imcv{font-size:20px;font-weight:700}.imcl{font-size:11px;color:#999;margin-top:2px}.imcs{font-size:11px;font-weight:600;margin-top:3px}
-.cwrap{border:1px solid #e8e8e8;border-radius:14px;overflow:hidden}
-.cmsgs{padding:12px;min-height:220px;max-height:320px;overflow-y:auto;display:flex;flex-direction:column;gap:10px}
+.{border:1px solid #e8e8e8;border-radius:14px;overflow:hidden}
+.{padding:12px;min-height:220px;max-height:320px;overflow-y:auto;display:flex;flex-direction:column;gap:10px}
 .mai{display:flex;gap:8px}.mu{display:flex;justify-content:flex-end}
 .bbl{padding:9px 13px;font-size:13px;line-height:1.6;max-width:88%}
 .bai{background:#f5f5f3;border-radius:14px 14px 14px 4px}
@@ -338,12 +338,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div id="s-tools" class="sec">
       <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:#E1F5EE;border-radius:14px;margin-bottom:12px">
         <div style="width:46px;height:46px;border-radius:50%;background:#1D9E75;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">💪</div>
-        <div><div style="font-size:14px;font-weight:600;color:#085041"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#1D9E75;margin-right:5px;vertical-align:middle"></span>Coach Fit35+</div><div style="font-size:11px;color:#0F6E56;margin-top:2px">Especialista en fitness · 35+ años de experiencia real</div></div>
+        <div><div style="font-size:14px;font-weight:600;color:#085041"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#1D9E75;margin-right:5px;vertical-align:middle"></span>+</div><div style="font-size:11px;color:#0F6E56;margin-top:2px"></div></div>
       </div>
-      <div class="chips" id="chiplist"></div>
-      <div id="chatwrap">
-        <div class="cwrap">
-          <div class="cmsgs" id="cmsgs"><div class="mai"><div class="mav">💪</div><div class="bbl bai" id="coach-bienvenida">¡Hola! Soy tu Herramientas de Fit35+. ¿En qué te puedo ayudar hoy?</div></div></div>
+      <div class="chips" id=""></div>
+      <div id="">
+        <div class="">
+          <div class="" id=""><div class="mai"><div class="mav">💪</div><div class="bbl bai" id="coach-bienvenida">¡Hola! Soy tu Herramientas de Fit35+. ¿En qué te puedo ayudar hoy?</div></div></div>
           <div class="cinput"><input class="cinp" id="cinp" placeholder="Escribe tu pregunta..." onkeydown="if(event.key==='Enter')doChat()"><button class="csend" id="csendbtn" onclick="doChat()">Enviar</button></div>
         </div>
         <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
@@ -351,7 +351,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
           <span class="qc" id="qcount">3 preguntas gratis</span>
         </div>
       </div>
-      <div class="pw" id="paywall">
+      <div class="pw" id="">
         <div style="font-size:26px;margin-bottom:6px">🔒</div>
         <div class="pw-t">¡Límite alcanzado!</div>
         <div class="pw-d">Suscríbete por $9.99/mes para acceso ilimitado al Herramientas.</div>
@@ -652,7 +652,7 @@ function irApp() {
   }
   setTimeout(checkNavArrows, 100);
   // Coach welcome
-  document.getElementById('cmsgs').innerHTML='<div class="mai"><div class="mav">💪</div><div class="bbl bai">'+L2.cwelcome+'</div></div>';
+  document.getElementById('').innerHTML='<div class="mai"><div class="mav">💪</div><div class="bbl bai">'+L2.cwelcome+'</div></div>';
   // Traducir UI
   traducirUI(L2);
   // Construir contenido
@@ -763,7 +763,7 @@ function mostrarSec(s,btn){
   document.querySelectorAll('.ntab').forEach(function(x){x.classList.remove('act');});
   if(btn)btn.classList.add('act');
   if(s==='meals')construirComidas();
-  // Enforce paywall for mujeres and mayor
+  // Enforce  for mujeres and mayor
   if(s==='mujeres'||s==='mayor'){
     var lock=document.getElementById('lock-'+s);
     var body=document.getElementById('body-'+s);
@@ -783,7 +783,7 @@ function irSec(s,i){
   document.querySelectorAll('.ntab').forEach(function(x){x.classList.remove('act');});
   if(tabs[i])tabs[i].classList.add('act');
   if(s==='meals')construirComidas();
-  // Enforce paywall for mujeres and mayor
+  // Enforce  for mujeres and mayor
   if(s==='mujeres'||s==='mayor'){
     var lock=document.getElementById('lock-'+s);
     var body=document.getElementById('body-'+s);
@@ -813,7 +813,7 @@ function traducirUI(L2){
   // Coach
   s('csendbtn', u.send);
   sp('cinp', u.send+'...');
-  // Paywall coach
+  //  coach
   s('qcount', '3 '+u.qfree);
   // User profile
   s('reg-tit-txt', u.regttit);
@@ -847,7 +847,7 @@ function traducirUI(L2){
   // Glúteos semana buttons
   var sa=document.getElementById('sem-a');var sb=document.getElementById('sem-b');
   if(sa)sa.textContent=u.sema;if(sb)sb.textContent=u.semb;
-  // Paywall coach text
+  //  coach text
   var pwt=document.querySelector('.pw-t');var pwd=document.querySelector('.pw-d');
   var pwb=document.querySelector('.pw-btn');var pwpl=document.querySelector('.pw-inp');
   if(pwt)pwt.textContent=u.pwlimit;
@@ -1053,12 +1053,12 @@ function genPlan(){
 // ========== Herramientas ==========
 function construirChips(){
   var chips=L('chips');
-  document.getElementById('chiplist').innerHTML=chips.map(function(c){return '<div class="chip" onclick="usarChip(\''+c.replace(/'/g,"\\'")+'\')">'+c+'</div>';}).join('');
+  document.getElementById('').innerHTML=chips.map(function(c){return '<div class="chip" onclick="usarChip(\''+c.replace(/'/g,"\\'")+'\')">'+c+'</div>';}).join('');
 }
 function usarChip(t){document.getElementById('cinp').value=t;doChat();}
 async function doChat(){
   var inp=document.getElementById('cinp');var msg=inp.value.trim();if(!msg)return;
-  if(freeQ<=0&&!isPro){document.getElementById('chatwrap').style.opacity='0.4';document.getElementById('chatwrap').style.pointerEvents='none';document.getElementById('paywall').className='pw vis';return;}
+  if(freeQ<=0&&!isPro){document.getElementById('').style.opacity='0.4';document.getElementById('').style.pointerEvents='none';document.getElementById('').className='pw vis';return;}
   agregarMsg('u',msg);inp.value='';document.getElementById('csendbtn').disabled=true;
   chatH.push({role:'user',content:msg});var lid=mostrarCarga();
   try{
@@ -1069,14 +1069,14 @@ async function doChat(){
   }catch(e){quitarCarga(lid);agregarMsg('ai','Error de conexión. Por favor intenta de nuevo.');}
   document.getElementById('csendbtn').disabled=false;
 }
-function actualizarQ(){var el=document.getElementById('qcount');if(isPro){el.textContent='✓ Acceso completo';return;}if(freeQ>0){el.textContent=freeQ+' preguntas gratis';}else{el.textContent='Sin preguntas gratis';document.getElementById('chatwrap').style.opacity='0.4';document.getElementById('chatwrap').style.pointerEvents='none';document.getElementById('paywall').className='pw vis';}}
+function actualizarQ(){var el=document.getElementById('qcount');if(isPro){el.textContent='✓ Acceso completo';return;}if(freeQ>0){el.textContent=freeQ+' preguntas gratis';}else{el.textContent='Sin preguntas gratis';document.getElementById('').style.opacity='0.4';document.getElementById('').style.pointerEvents='none';document.getElementById('').className='pw vis';}}
 function checkFam(){
   var v=document.getElementById('faminp').value.trim();
   if(v===FAM){
     isPro=true;freeQ=999;
-    document.getElementById('paywall').className='pw';
-    document.getElementById('chatwrap').style.opacity='1';
-    document.getElementById('chatwrap').style.pointerEvents='auto';
+    document.getElementById('').className='pw';
+    document.getElementById('').style.opacity='1';
+    document.getElementById('').style.pointerEvents='auto';
     actualizarQ();
     agregarMsg('ai','¡Acceso familiar activado! Herramientas ilimitado. 💪');
     ['mujeres','mayor'].forEach(function(sid){
@@ -1110,8 +1110,8 @@ function unlockSec(id){
     if(codeEl)codeEl.value='';
   }
 }
-function agregarMsg(r,t){var c=document.getElementById('cmsgs'),d=document.createElement('div');d.className=r==='ai'?'mai':'mu';d.innerHTML=r==='ai'?'<div class="mav">💪</div><div class="bbl bai">'+t+'</div>':'<div class="bbl bu">'+t+'</div>';c.appendChild(d);c.scrollTop=c.scrollHeight;}
-function mostrarCarga(){var c=document.getElementById('cmsgs'),id='l'+Date.now(),d=document.createElement('div');d.className='mai';d.id=id;d.innerHTML='<div class="mav">💪</div><div class="bbl bai"><div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>';c.appendChild(d);c.scrollTop=c.scrollHeight;return id;}
+function agregarMsg(r,t){var c=document.getElementById(''),d=document.createElement('div');d.className=r==='ai'?'mai':'mu';d.innerHTML=r==='ai'?'<div class="mav">💪</div><div class="bbl bai">'+t+'</div>':'<div class="bbl bu">'+t+'</div>';c.appendChild(d);c.scrollTop=c.scrollHeight;}
+function mostrarCarga(){var c=document.getElementById(''),id='l'+Date.now(),d=document.createElement('div');d.className='mai';d.id=id;d.innerHTML='<div class="mav">💪</div><div class="bbl bai"><div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>';c.appendChild(d);c.scrollTop=c.scrollHeight;return id;}
 function quitarCarga(id){var el=document.getElementById(id);if(el)el.remove();}
 
 // ========== EDADES ==========
