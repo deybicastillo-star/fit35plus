@@ -1,0 +1,1280 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fit35+</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f3;color:#1a1a18}
+.app{max-width:480px;margin:0 auto;background:#fff;min-height:100vh;overflow:hidden;position:relative}
+
+/* PAGINAS - igual que test_flujo que funcionó */
+.pag{display:none}.pag.vis{display:block}
+
+/* LANG */
+#pag-lang{padding:20px}
+.logo{font-size:38px;font-weight:700;text-align:center;padding:24px 0 4px;letter-spacing:-1px}
+.logo span{color:#1D9E75}
+.subtit{text-align:center;font-size:13px;color:#999;margin-bottom:3px}
+.ptit{text-align:center;font-size:15px;font-weight:600;margin:16px 0 12px}
+.lgrilla{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.litem{display:flex;align-items:center;gap:10px;padding:13px;border:2px solid #ddd;border-radius:12px;cursor:pointer;background:#fff}
+.lflag{font-size:24px;flex-shrink:0}
+.lname{font-size:13px;font-weight:600}
+.lsub{font-size:11px;color:#999}
+.ind{text-align:center;font-size:12px;color:#0F6E56;margin-bottom:8px;min-height:18px;font-weight:500}
+.btnv{width:100%;padding:14px;background:#1D9E75;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit}
+
+/* GRUPO */
+#pag-grupo{padding:20px}
+.ggrilla{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0}
+.gitem{border:2px solid #ddd;border-radius:14px;padding:14px 8px;cursor:pointer;text-align:center;background:#fff}
+.gicon{font-size:28px;margin-bottom:5px}
+.gname{font-size:13px;font-weight:600}
+.gsub{font-size:11px;color:#999;margin-top:3px}
+
+/* APP */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid #eee;position:sticky;top:0;background:#fff;z-index:10}
+.logo-sm{font-size:22px;font-weight:700;letter-spacing:-.5px}
+.logo-sm span{color:#1D9E75}
+.lpill{font-size:11px;background:#E1F5EE;color:#0F6E56;padding:4px 10px;border-radius:20px;cursor:pointer;border:none;font-weight:500;font-family:inherit}
+.nav{display:flex;overflow-x:auto;gap:4px;padding:10px 14px;border-bottom:1px solid #eee;scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-behavior:smooth}
+.nav::-webkit-scrollbar{display:none}
+.ntab{flex-shrink:0;padding:6px 10px;border:1px solid #ddd;border-radius:20px;background:#fff;font-size:11px;font-weight:500;color:#666;cursor:pointer;white-space:nowrap;font-family:inherit;-webkit-tap-highlight-color:transparent}
+.ntab.act{background:#1D9E75;color:#fff;border-color:#1D9E75}
+.cont{padding:14px}
+.sec{display:none}.sec.act{display:block}
+
+/* CARDS */
+.card{background:#fff;border:1px solid #e8e8e8;border-radius:14px;padding:14px;margin-bottom:10px}
+.ctit{font-size:14px;font-weight:700;margin-bottom:10px}
+.hero{background:#1D9E75;border-radius:14px;padding:20px;margin-bottom:12px;color:#fff}
+.hero h2{font-size:20px;font-weight:700;margin-bottom:4px}
+.hero p{font-size:13px;opacity:.85;line-height:1.5}
+.sg2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.sg3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
+.stat{background:#f5f5f3;border-radius:10px;padding:12px;text-align:center}
+.sv{font-size:22px;font-weight:700}.sl{font-size:11px;color:#999;margin-top:2px}
+.pday{border-left:3px solid #1D9E75;padding:6px 0 6px 10px;margin-bottom:8px}
+.pday-t{font-size:13px;font-weight:600}.pday-s{font-size:12px;color:#666;margin-top:2px}
+.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px}
+.mcard{border:1px solid #e8e8e8;border-radius:14px;padding:14px;cursor:pointer;background:#fff}
+.micon{font-size:24px;margin-bottom:6px}.mname{font-size:13px;font-weight:600}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px}
+.gbtn{padding:9px;border:1px solid #ddd;border-radius:8px;background:#fff;cursor:pointer;font-size:12px;font-weight:500;color:#666;text-align:center;font-family:inherit}
+.gbtn.act{background:#E1F5EE;color:#0F6E56;border-color:#1D9E75;font-weight:600}
+.irow{margin-bottom:10px}
+.ilbl{font-size:12px;color:#666;margin-bottom:4px;display:block}
+.irow input,.irow select,.finput{width:100%;padding:9px 11px;font-size:13px;border:1px solid #ddd;border-radius:8px;background:#fff;color:#1a1a18;font-family:inherit}
+.mbtn{width:100%;padding:12px;background:#1D9E75;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit}
+.rbox{border-radius:10px;padding:13px;margin-top:10px;display:none}
+.rbox.vis{display:block}
+.rbox.g{background:#E1F5EE;border:1px solid #5DCAA5}
+.rbox.a{background:#FAEEDA;border:1px solid #EF9F27}
+.rtit{font-size:13px;font-weight:600;margin-bottom:7px}
+.rbox.g .rtit{color:#085041}.rbox.a .rtit{color:#633806}
+.ritem{font-size:12px;line-height:1.6;padding-left:10px;position:relative;margin-bottom:2px}
+.rbox.g .ritem{color:#0F6E56}.rbox.a .ritem{color:#854F0B}
+.ritem::before{content:'·';position:absolute;left:0}
+.imc2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.imcc{background:#f5f5f3;border-radius:8px;padding:10px;text-align:center}
+.imcv{font-size:20px;font-weight:700}.imcl{font-size:11px;color:#999;margin-top:2px}.imcs{font-size:11px;font-weight:600;margin-top:3px}
+.cwrap{border:1px solid #e8e8e8;border-radius:14px;overflow:hidden}
+.cmsgs{padding:12px;min-height:220px;max-height:320px;overflow-y:auto;display:flex;flex-direction:column;gap:10px}
+.mai{display:flex;gap:8px}.mu{display:flex;justify-content:flex-end}
+.bbl{padding:9px 13px;font-size:13px;line-height:1.6;max-width:88%}
+.bai{background:#f5f5f3;border-radius:14px 14px 14px 4px}
+.bu{background:#1D9E75;color:#fff;border-radius:14px 14px 4px 14px}
+.mav{width:28px;height:28px;border-radius:50%;background:#E1F5EE;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;margin-top:2px}
+.cinput{border-top:1px solid #eee;display:flex}
+.cinp{flex:1;border:none;padding:11px 14px;font-size:13px;background:#fff;font-family:inherit;outline:none}
+.csend{border:none;background:#1D9E75;color:#fff;padding:0 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.chip{border:1px solid #ddd;background:#fff;color:#666;font-size:11px;padding:5px 10px;border-radius:20px;cursor:pointer;font-family:inherit}
+.dots{display:inline-flex;gap:4px}
+.dot{width:6px;height:6px;border-radius:50%;background:#1D9E75;animation:blink 1.2s infinite}
+.dot:nth-child(2){animation-delay:.2s}.dot:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,80%,100%{opacity:.2}40%{opacity:1}}
+.qc{font-size:11px;font-weight:500;color:#0F6E56;background:#E1F5EE;padding:3px 9px;border-radius:20px}
+.pw{background:#FAECE7;border:1.5px solid #F0997B;border-radius:14px;padding:16px;text-align:center;margin-top:10px;display:none}
+.pw.vis{display:block}
+.pw-t{font-size:14px;font-weight:700;color:#993C1D;margin-bottom:6px}
+.pw-d{font-size:12px;color:#712B13;line-height:1.6;margin-bottom:12px}
+.pw-btn{display:block;background:#1D9E75;color:#fff;padding:12px;border-radius:10px;font-size:14px;font-weight:700;text-decoration:none;margin-bottom:8px}
+.pw-row{display:flex;gap:6px;margin-top:8px}
+.pw-inp{flex:1;padding:8px 10px;font-size:13px;border:1px solid #F0997B;border-radius:8px;font-family:inherit}
+.pw-go{background:#993C1D;color:#fff;border:none;padding:8px 14px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
+.pw-err{font-size:11px;color:#A32D2D;margin-top:4px;display:none}
+.bodygrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.bpart{padding:10px 6px;border:2px solid #ddd;border-radius:10px;background:#fff;cursor:pointer;text-align:center}
+.bpart.act{border-color:#1D9E75;background:#E1F5EE}
+.stabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.stab{padding:5px 12px;border:1px solid #ddd;border-radius:20px;background:#fff;cursor:pointer;font-size:11px;color:#666;font-family:inherit}
+.stab.act{background:#FAECE7;color:#993C1D;border-color:#F0997B;font-weight:500}
+.trow{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid #eee}
+.trow:last-child{border-bottom:none}
+.tico{font-size:16px;flex-shrink:0;width:22px;text-align:center}
+.tt{font-size:13px;font-weight:600;margin-bottom:2px}.td{font-size:12px;color:#666;line-height:1.5}
+.alr{padding:9px 12px;margin-top:8px;font-size:12px;line-height:1.5;border-left:3px solid}
+.alr-r{background:#FCEBEB;color:#A32D2D;border-color:#E24B4A}
+.alr-g{background:#E1F5EE;color:#0F6E56;border-color:#1D9E75}
+.mb{background:#FAEEDA;border-radius:10px;padding:12px;margin-bottom:8px}
+.ml{background:#E1F5EE;border-radius:10px;padding:12px;margin-bottom:8px}
+.md{background:#E6F1FB;border-radius:10px;padding:12px;margin-bottom:8px}
+.mtime{font-size:11px;font-weight:600;margin-bottom:4px}
+.mb .mtime{color:#633806}.ml .mtime{color:#085041}.md .mtime{color:#0C447C}
+.mfood{font-size:13px;font-weight:600;margin-bottom:3px}
+.mdet{font-size:12px;color:#666;line-height:1.5}
+.macros{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+.mac{font-size:10px;padding:2px 8px;border-radius:20px}
+.mp{background:#EEEDFE;color:#534AB7}.mc{background:#FAEEDA;color:#BA7517}.mg{background:#E1F5EE;color:#0F6E56}
+.rtabs{display:flex;gap:4px;margin-bottom:14px;background:#f5f5f3;border-radius:12px;padding:4px}
+.rtab{flex:1;padding:8px 4px;border:none;background:transparent;font-size:11px;font-weight:500;color:#666;cursor:pointer;border-radius:10px;font-family:inherit;text-align:center}
+.rtab.act{background:#fff;color:#1a1a18;font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+.rsec{display:none}.rsec.act{display:block}
+.day-card{border:1px solid #e8e8e8;border-radius:14px;margin-bottom:10px;overflow:hidden}
+.day-hdr{padding:12px 14px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;background:#f9f9f7}
+.day-tit{font-size:14px;font-weight:700}.day-sub{font-size:11px;color:#666;margin-top:2px}
+.day-bdg{font-size:11px;background:#E1F5EE;color:#0F6E56;padding:3px 9px;border-radius:20px;font-weight:500;flex-shrink:0}
+.day-body{display:none;padding:12px 14px;border-top:1px solid #eee}.day-body.open{display:block}
+.muscle-tit{font-size:13px;font-weight:700;color:#1D9E75;margin:10px 0 8px}
+.stable{width:100%;border-collapse:collapse}
+.stable th{font-size:10px;color:#999;padding:4px 6px;text-align:left;border-bottom:1px solid #eee}
+.stable td{font-size:12px;padding:6px;border-bottom:1px solid #f0f0f0}
+.stable tr:last-child td{border-bottom:none}
+.s-warm td{background:#E6F1FB}.s-aprox td{background:#FAEEDA}.s-max td{background:#FAECE7;color:#993C1D;font-weight:600}
+.bwarm{background:#E6F1FB;color:#185FA5;font-size:10px;padding:2px 7px;border-radius:20px}
+.baprox{background:#FAEEDA;color:#854F0B;font-size:10px;padding:2px 7px;border-radius:20px}
+.bwork{background:#E1F5EE;color:#0F6E56;font-size:10px;padding:2px 7px;border-radius:20px}
+.bmax{background:#FCEBEB;color:#A32D2D;font-size:10px;padding:2px 7px;border-radius:20px}
+.tip-box{background:#E1F5EE;border-radius:8px;padding:9px 11px;margin-top:10px;font-size:12px;color:#085041;line-height:1.5}
+.week-note{background:#f5f5f3;border-radius:10px;padding:10px 12px;margin-bottom:12px;font-size:12px;color:#666;line-height:1.6}
+.lock-box{background:#FAECE7;border:1.5px solid #F0997B;border-radius:14px;padding:16px;text-align:center;margin-bottom:14px}
+.lock-t{font-size:14px;font-weight:700;color:#993C1D;margin-bottom:5px}
+.lock-d{font-size:12px;color:#712B13;line-height:1.6;margin-bottom:12px}
+.lock-btn{display:block;background:#1D9E75;color:#fff;padding:12px;border-radius:10px;font-size:14px;font-weight:700;text-decoration:none;margin-bottom:8px}
+.lock-row{display:flex;gap:6px;margin-top:8px}
+.lock-inp{flex:1;padding:8px 10px;font-size:13px;border:1px solid #F0997B;border-radius:8px;font-family:inherit}
+.lock-go{background:#993C1D;color:#fff;border:none;padding:8px 14px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
+.lock-err{font-size:11px;color:#A32D2D;margin-top:4px;display:none}
+.ej-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
+.ej-card{border:1px solid #e8e8e8;border-radius:10px;padding:8px;text-align:center;background:#fff}
+.ej-name{font-size:10px;font-weight:600;color:#1a1a18;margin-top:4px;line-height:1.3}
+.obj-toggle{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.obj-btn{padding:12px 8px;border:2px solid #ddd;border-radius:12px;background:#fff;cursor:pointer;text-align:center;font-family:inherit}
+.obj-btn.act-m{border-color:#1D9E75;background:#E1F5EE}
+.obj-btn.act-d{border-color:#D4537E;background:#FBEAF0}
+.obj-icon{font-size:22px;margin-bottom:4px}.obj-name{font-size:12px;font-weight:600}
+.sem-toggle{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.sem-btn{padding:10px;border:2px solid #ddd;border-radius:10px;background:#fff;cursor:pointer;text-align:center;font-size:12px;font-weight:600;color:#666;font-family:inherit}
+.sem-btn.act{border-color:#D4537E;background:#FBEAF0;color:#993556}
+.am-badge{background:#FAEEDA;color:#633806;border-radius:10px;padding:10px 12px;font-size:12px;line-height:1.6;margin-bottom:10px}
+.atog{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.abtn{padding:14px 10px;border:2px solid #ddd;border-radius:14px;background:#fff;cursor:pointer;text-align:center;font-family:inherit}
+.abtn.ay{border-color:#534AB7;background:#EEEDFE}.abtn.aa{border-color:#1D9E75;background:#E1F5EE}
+.aicon{font-size:26px;margin-bottom:5px}.aname{font-size:13px;font-weight:600}.asub{font-size:11px;color:#999;margin-top:2px}
+.diff{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.dy{background:#EEEDFE;border-radius:10px;padding:10px 12px}.da{background:#E1F5EE;border-radius:10px;padding:10px 12px}
+.dt{font-size:12px;font-weight:700;margin-bottom:5px}.dy .dt{color:#3C3489}.da .dt{color:#085041}
+.di{font-size:11px;line-height:1.5;margin-bottom:2px}.dy .di{color:#534AB7}.da .di{color:#0F6E56}
+.fc{border:1px solid #e8e8e8;border-radius:10px;overflow:hidden;cursor:pointer;margin-bottom:8px}
+.fh{padding:11px 13px;display:flex;justify-content:space-between;align-items:center;background:#f5f5f3}
+.fn{font-size:13px;font-weight:600}
+.fb{padding:11px 13px;display:none;border-top:1px solid #eee}.fb.vis{display:block}
+.fr{display:grid;grid-template-columns:75px 1fr;gap:5px;margin-bottom:6px}
+.fl{font-size:11px;color:#999}.fv{font-size:12px;line-height:1.5}
+.fdis{background:#FCEBEB;border-radius:8px;padding:8px 10px;font-size:11px;color:#A32D2D;margin-top:8px}
+.prof-head{background:#1D9E75;border-radius:14px;padding:16px;margin-bottom:12px;color:#fff;display:flex;align-items:center;gap:14px}
+.av-circle{width:50px;height:50px;border-radius:50%;background:rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;flex-shrink:0}
+.utabs{display:flex;gap:4px;margin:10px 0;background:#f5f5f3;border-radius:12px;padding:4px}
+.utab{flex:1;padding:7px 3px;border:none;background:transparent;font-size:14px;font-weight:500;color:#666;cursor:pointer;border-radius:10px;font-family:inherit;text-align:center}
+.utab.act{background:#fff;color:#1a1a18;font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+.usec{display:none}.usec.act{display:block}
+.frow2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.flbl{font-size:11px;color:#666;margin-bottom:3px;display:block}
+.save-btn{background:#1D9E75;color:#fff;border:none;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
+.cancel-btn{background:transparent;color:#666;border:1px solid #ddd;padding:10px 16px;border-radius:8px;font-size:13px;cursor:pointer;font-family:inherit;margin-left:8px}
+.ok-msg{background:#E1F5EE;border:1px solid #5DCAA5;border-radius:8px;padding:10px 12px;font-size:12px;color:#085041;margin-top:8px;display:none}
+.ok-msg.show{display:block}
+.prog-item{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f0f0f0}
+.prog-item:last-child{border-bottom:none}
+.rec-item{padding:8px 0;border-bottom:1px solid #f0f0f0}.rec-item:last-child{border-bottom:none}
+.rec-bar{height:4px;background:#f0f0f0;border-radius:2px;margin-top:5px}
+.rec-fill{height:4px;background:#1D9E75;border-radius:2px}
+.hist-item{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid #f0f0f0}
+.hist-item:last-child{border-bottom:none}
+.hist-bar{flex:1;height:5px;background:#f0f0f0;border-radius:3px;overflow:hidden}
+.hist-fill{height:5px;background:#1D9E75;border-radius:3px}
+.aho{text-align:center;padding:1.5rem 0 1rem}
+.alo{font-size:36px;font-weight:700;letter-spacing:-1px}
+.alo span{color:#1D9E75}
+.mis{background:#E1F5EE;border-left:3px solid #1D9E75;padding:12px 14px;margin:12px 0}
+.mis-t{font-size:13px;color:#085041;line-height:1.7;font-style:italic}
+.person{display:flex;gap:12px;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid #eee}
+.person:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none}
+.av{width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;flex-shrink:0}
+.avd{background:#E1F5EE;color:#0F6E56}.avc{background:#EEEDFE;color:#534AB7}
+.pn{font-size:14px;font-weight:700;margin-bottom:2px}.pr{font-size:12px;color:#1D9E75;font-weight:600;margin-bottom:4px}
+.pd{font-size:12px;color:#666;line-height:1.5;margin-bottom:5px}.pc{font-size:12px;color:#999;margin-top:3px}
+.copy{font-size:11px;color:#999;text-align:center;padding:1rem 0 2rem;line-height:1.7}
+.badge{display:inline-block;font-size:10px;padding:2px 8px;border-radius:20px;margin:2px}
+.bg{background:#E1F5EE;color:#0F6E56}.bb{background:#E6F1FB;color:#185FA5}
+.ba{background:#FAEEDA;color:#854F0B}.br{background:#FCEBEB;color:#A32D2D}.bp{background:#EEEDFE;color:#534AB7}
+.mentor-desc{font-size:12px;color:#666;line-height:1.6;background:#f9f9f7;border-radius:10px;padding:10px 12px;margin-bottom:12px}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- PAGINA 1: IDIOMA - mismo código que test_flujo que funcionó -->
+<div id="pag-lang" class="pag vis">
+  <div class="logo">Fit<span>35+</span></div>
+  <div class="subtit">Your AI fitness coach · Tu entrenador IA</div>
+  <div class="subtit">Seu treinador IA · Ihr KI-Trainer</div>
+  <div class="ptit">Elige tu idioma · Choose your language</div>
+  <div class="lgrilla">
+    <div class="litem" id="li-es" onclick="elegir('es','Español','🇪🇸','Continuar →')"><span class="lflag">🇪🇸</span><div><div class="lname">Español</div><div class="lsub">Spanish</div></div></div>
+    <div class="litem" id="li-en" onclick="elegir('en','English','🇺🇸','Continue →')"><span class="lflag">🇺🇸</span><div><div class="lname">English</div><div class="lsub">Inglés</div></div></div>
+    <div class="litem" id="li-pt" onclick="elegir('pt','Português','🇧🇷','Continuar →')"><span class="lflag">🇧🇷</span><div><div class="lname">Português</div><div class="lsub">Portuguese</div></div></div>
+    <div class="litem" id="li-fr" onclick="elegir('fr','Français','🇫🇷','Continuer →')"><span class="lflag">🇫🇷</span><div><div class="lname">Français</div><div class="lsub">French</div></div></div>
+    <div class="litem" id="li-de" onclick="elegir('de','Deutsch','🇩🇪','Weiter →')"><span class="lflag">🇩🇪</span><div><div class="lname">Deutsch</div><div class="lsub">German</div></div></div>
+    <div class="litem" id="li-it" onclick="elegir('it','Italiano','🇮🇹','Continua →')"><span class="lflag">🇮🇹</span><div><div class="lname">Italiano</div><div class="lsub">Italian</div></div></div>
+    <div class="litem" id="li-zh" onclick="elegir('zh','中文','🇨🇳','继续 →')"><span class="lflag">🇨🇳</span><div><div class="lname">中文</div><div class="lsub">Chinese</div></div></div>
+    <div class="litem" id="li-ja" onclick="elegir('ja','日本語','🇯🇵','続ける →')"><span class="lflag">🇯🇵</span><div><div class="lname">日本語</div><div class="lsub">Japanese</div></div></div>
+  </div>
+  <div class="ind" id="lang-ind"></div>
+  <button class="btnv" id="btn-lang" onclick="irPag2()">Continuar →</button>
+</div>
+
+<!-- PAGINA 2: GRUPO - mismo código que test_flujo -->
+<div id="pag-grupo" class="pag">
+  <button onclick="volverLang()" style="background:none;border:1px solid #ddd;border-radius:8px;font-size:14px;cursor:pointer;padding:8px 14px;margin-top:14px;color:#666;font-family:inherit">← Volver</button>
+  <div class="logo" style="padding:8px 0 6px">Fit<span style="color:#1D9E75">35+</span></div>
+  <div class="ptit" id="grupo-tit">¿Cómo te identificas?</div>
+  <div class="ggrilla">
+    <div class="gitem" id="g-hombre" onclick="elegirGrupo('hombre')"><div class="gicon">💪</div><div class="gname" id="gn-h">Hombre</div><div class="gsub" id="gs-h">Rutinas masculinas</div></div>
+    <div class="gitem" id="g-mujer" onclick="elegirGrupo('mujer')"><div class="gicon">🌸</div><div class="gname" id="gn-m">Mujer</div><div class="gsub" id="gs-m">Rutinas femeninas</div></div>
+    <div class="gitem" id="g-mayor" onclick="elegirGrupo('mayor')"><div class="gicon">🏆</div><div class="gname" id="gn-a">Adulto mayor</div><div class="gsub" id="gs-a">65+ años</div></div>
+  </div>
+  <button class="btnv" id="btn-grupo" onclick="irApp()" style="opacity:.4;cursor:default">Entrar →</button>
+</div>
+
+<!-- PAGINA 3: APP PRINCIPAL -->
+<div id="pag-app" class="pag">
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:6px">
+      <button onclick="irHome()" style="background:none;border:none;font-size:24px;cursor:pointer;padding:0;color:#999;line-height:1">⌂</button>
+      <div class="logo-sm">Fit<span>35+</span></div>
+    </div>
+    <button class="lpill" id="lpill" onclick="volverInicio()">🇪🇸 ES</button>
+  </div>
+  <div style="display:flex;align-items:center;border-bottom:1px solid #eee;background:#fff">
+    <button onclick="scrollNav(-150)" style="border:none;background:#fff;border-right:1px solid #eee;padding:8px 10px;cursor:pointer;font-size:20px;color:#666;flex-shrink:0;line-height:1;font-weight:bold">‹</button>
+    <div class="nav" id="navbar"></div>
+    <button onclick="scrollNav(150)" style="border:none;background:#fff;border-left:1px solid #eee;padding:8px 10px;cursor:pointer;font-size:20px;color:#666;flex-shrink:0;line-height:1;font-weight:bold">›</button>
+  </div>
+  <div class="cont">
+    <div id="s-home" class="sec act">
+      <div class="hero"><h2 id="hw">¡Bienvenido!</h2><p id="hs">Tu entrenador personal con IA.</p></div>
+      <div class="sg2" id="home-stats"></div>
+      <div class="card"><div class="ctit" id="plan-tit">Plan semanal</div><div id="plan-semanal"></div></div>
+      <div class="mgrid" id="homemenu"></div>
+    </div>
+    <div id="s-ages" class="sec">
+      <div class="atog">
+        <div class="abtn ay" id="ab-y" onclick="setEdad('y')"><div class="aicon">🔥</div><div class="aname">Jóvenes</div><div class="asub">18–34</div></div>
+        <div class="abtn" id="ab-a" onclick="setEdad('a')"><div class="aicon">💪</div><div class="aname">Adultos</div><div class="asub">35+</div></div>
+      </div>
+      <div id="edad-y">
+        <div class="card"><div class="ctit">Ventajas de entrenar joven</div>
+          <div class="trow"><div class="tico">⚡</div><div><div class="tt">Hormonas a tu favor</div><div class="td">Testosterona alta. El mejor momento para ganar músculo.</div></div></div>
+          <div class="trow"><div class="tico">🏋️</div><div><div class="tt">Entrena 5-6 días</div><div class="td">Recuperación rápida en 24-48h.</div></div></div>
+          <div class="trow"><div class="tico">🥩</div><div><div class="tt">Proteína: 2.2g/kg</div><div class="td">Sin proteína suficiente no hay músculo.</div></div></div>
+          <div class="trow"><div class="tico">😴</div><div><div class="tt">Duerme 8 horas</div><div class="td">El 80% del crecimiento ocurre durmiendo.</div></div></div>
+        </div>
+        <div class="card"><div class="ctit">Jóvenes vs Adultos 35+</div>
+          <div class="diff">
+            <div class="dy"><div class="dt">Jóvenes 18-34</div><div class="di">· Metabolismo rápido</div><div class="di">· Más testosterona</div><div class="di">· Recupera 24-48h</div><div class="di">· 5-6 días/semana</div></div>
+            <div class="da"><div class="dt">Adultos 35+</div><div class="di">· Metabolismo lento</div><div class="di">· Testosterona baja</div><div class="di">· Recupera 48-72h</div><div class="di">· 3-4 días/semana</div></div>
+          </div>
+        </div>
+      </div>
+      <div id="edad-a" style="display:none">
+        <div class="card"><div class="ctit">Lo que cambia después de los 35</div>
+          <div class="trow"><div class="tico">📉</div><div><div class="tt">Testosterona baja 1% cada año</div><div class="td">El entrenamiento de fuerza la mantiene alta.</div></div></div>
+          <div class="trow"><div class="tico">🛌</div><div><div class="tt">Descanso obligatorio</div><div class="td">48-72h para recuperarse. Ignorarlo causa lesiones.</div></div></div>
+          <div class="trow"><div class="tico">💪</div><div><div class="tt">Aún puedes ganar músculo</div><div class="td">Personas de 50, 60 y 70 años transforman su cuerpo.</div></div></div>
+          <div class="trow"><div class="tico">🧬</div><div><div class="tt">Suplementos clave 35+</div><div class="td">Creatina, D3, omega-3, colágeno y magnesio.</div></div></div>
+        </div>
+      </div>
+    </div>
+    <div id="s-nutrition" class="sec">
+      <div class="card">
+        <div class="ctit">Tu objetivo</div>
+        <div class="g2" id="nutgoals"></div>
+        <div class="irow"><label class="ilbl">Edad</label><input type="number" id="nedad" placeholder="42"></div>
+        <div class="irow"><label class="ilbl">Peso (kg)</label><input type="number" id="npeso" placeholder="75" oninput="calcIMC()"></div>
+        <div class="irow"><label class="ilbl">Estatura (cm)</label><input type="number" id="naltura" placeholder="170" oninput="calcIMC()"></div>
+        <div class="imc2" id="imcrow" style="display:none">
+          <div class="imcc"><div class="imcv" id="imcv">—</div><div class="imcl">IMC</div><div class="imcs" id="imcs"></div></div>
+          <div class="imcc"><div class="imcv" id="imci">—</div><div class="imcl">Peso ideal</div></div>
+        </div>
+        <div class="irow"><label class="ilbl">Actividad</label>
+          <select id="nact">
+            <option value="1.2">Sedentario</option>
+            <option value="1.375">Ligero (1-3 días)</option>
+            <option value="1.55" selected>Moderado (3-5 días)</option>
+            <option value="1.725">Muy activo (6-7 días)</option>
+          </select>
+        </div>
+        <button class="mbtn" onclick="genPlan()">Generar mi plan</button>
+        <div class="rbox" id="planres"><div class="rtit" id="res-tit"></div><div id="res-body"></div></div>
+      </div>
+      <div class="card"><div class="ctit">Suplementos recomendados</div>
+        <span class="badge bg">Creatina</span><span class="badge bb">Omega-3</span><span class="badge ba">Vitamina D3</span><span class="badge bg">Proteína whey</span><span class="badge bb">Magnesio</span><span class="badge ba">Colágeno</span>
+      </div>
+    </div>
+    <div id="s-coach" class="sec">
+      <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:#E1F5EE;border-radius:14px;margin-bottom:12px">
+        <div style="width:46px;height:46px;border-radius:50%;background:#1D9E75;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">💪</div>
+        <div><div style="font-size:14px;font-weight:600;color:#085041"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#1D9E75;margin-right:5px;vertical-align:middle"></span>Coach Fit35+</div><div style="font-size:11px;color:#0F6E56;margin-top:2px">Especialista en fitness · 35+ años de experiencia real</div></div>
+      </div>
+      <div class="chips" id="chiplist"></div>
+      <div id="chatwrap">
+        <div class="cwrap">
+          <div class="cmsgs" id="cmsgs"><div class="mai"><div class="mav">💪</div><div class="bbl bai" id="coach-bienvenida">¡Hola! Soy tu Coach IA de Fit35+. ¿En qué te puedo ayudar hoy?</div></div></div>
+          <div class="cinput"><input class="cinp" id="cinp" placeholder="Escribe tu pregunta..." onkeydown="if(event.key==='Enter')doChat()"><button class="csend" id="csendbtn" onclick="doChat()">Enviar</button></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+          <span style="font-size:10px;color:#999">Coach IA · Anthropic</span>
+          <span class="qc" id="qcount">3 preguntas gratis</span>
+        </div>
+      </div>
+      <div class="pw" id="paywall">
+        <div style="font-size:26px;margin-bottom:6px">🔒</div>
+        <div class="pw-t">¡Límite alcanzado!</div>
+        <div class="pw-d">Suscríbete por $9.99/mes para acceso ilimitado al Coach IA.</div>
+        <a href="https://www.paypal.me/DeybiVillar651/9.99" target="_blank" class="pw-btn">💳 Suscribirme — $9.99/mes</a>
+        <div style="font-size:10px;color:#993C1D;margin-bottom:8px">Pago seguro vía PayPal</div>
+        <div style="border-top:1px solid #F0997B;padding-top:10px">
+          <div style="font-size:11px;color:#993C1D;margin-bottom:5px">¿Tienes código familiar?</div>
+          <div class="pw-row"><input type="password" class="pw-inp" id="faminp" placeholder="Código..."><button class="pw-go" onclick="checkFam()">→</button></div>
+          <div class="pw-err" id="famerr">Código incorrecto.</div>
+        </div>
+      </div>
+    </div>
+    <div id="s-injuries" class="sec">
+      <div class="card"><div class="ctit">¿Dónde sientes la molestia?</div><div class="bodygrid" id="bodygrid"></div><div id="injdet"></div></div>
+    </div>
+    <div id="s-meals" class="sec">
+      <div class="card"><div class="ctit">Tu objetivo</div><div class="g2" id="mealgoals"></div><div id="mealsout"></div></div>
+    </div>
+    <div id="s-rutinas" class="sec">
+      <div class="rtabs">
+        <button class="rtab act" onclick="showRtab('normal',this)">Normal</button>
+        <button class="rtab" onclick="showRtab('mentzer',this)">Mentzer</button>
+        <button class="rtab" onclick="showRtab('yates',this)">Yates</button>
+        <button class="rtab" onclick="showRtab('cambio',this)">Cambio</button>
+      </div>
+      <div id="rt-normal" class="rsec act"></div>
+      <div id="rt-mentzer" class="rsec"></div>
+      <div id="rt-yates" class="rsec"></div>
+      <div id="rt-cambio" class="rsec"></div>
+    </div>
+    <div id="s-mujeres" class="sec">
+      <div id="lock-mujeres" class="lock-box">
+        <div style="font-size:26px;margin-bottom:6px">🔒</div>
+        <div class="lock-t">Rutinas PRO — Mujeres</div>
+        <div class="lock-d">Rutinas femeninas completas con glúteos, definición y ganancia muscular. Exclusivo PRO $9.99/mes.</div>
+        <a href="https://www.paypal.me/DeybiVillar651/9.99" target="_blank" class="lock-btn">💳 Suscribirme — $9.99/mes</a>
+        <div class="lock-row"><input type="password" class="lock-inp" id="code-mujeres" placeholder="Código familiar..."><button class="lock-go" onclick="unlockSec('mujeres')">→</button></div>
+        <div class="lock-err" id="err-mujeres">Código incorrecto.</div>
+      </div>
+      <div id="body-mujeres" style="display:none">
+        <div class="card"><div class="ctit">Tu objetivo</div>
+          <div class="obj-toggle">
+            <div class="obj-btn act-m" id="obj-muscle" onclick="setObjMujer('muscle',this)"><div class="obj-icon">💪</div><div class="obj-name">Ganar músculo</div><div style="font-size:10px;color:#666;margin-top:3px">8-10 reps</div></div>
+            <div class="obj-btn" id="obj-def" onclick="setObjMujer('def',this)"><div class="obj-icon">✨</div><div class="obj-name">Definición</div><div style="font-size:10px;color:#666;margin-top:3px">12-15 reps + cardio</div></div>
+          </div>
+          <div id="mujer-contenido"></div>
+        </div>
+        <div class="card"><div class="ctit">🍑 Glúteos — Rotación semanal</div>
+          <div class="sem-toggle">
+            <div class="sem-btn act" id="sem-a" onclick="setSemana('A',this)">Semana A</div>
+            <div class="sem-btn" id="sem-b" onclick="setSemana('B',this)">Semana B</div>
+          </div>
+          <div id="gluteo-contenido"></div>
+          <div class="tip-box" style="margin-top:10px">💡 Alterna semana A y B. El glúteo nunca se adapta y sigue creciendo.</div>
+        </div>
+        <div class="card"><div class="ctit">Suplementos para mujeres</div>
+          <span class="badge bg">Proteína whey</span><span class="badge bb">Omega-3</span><span class="badge ba">Vitamina D3</span><span class="badge bg">Colágeno</span><span class="badge bp">Hierro</span><span class="badge bb">Magnesio</span>
+        </div>
+      </div>
+    </div>
+    <div id="s-mayor" class="sec">
+      <div id="lock-mayor" class="lock-box">
+        <div style="font-size:26px;margin-bottom:6px">🔒</div>
+        <div class="lock-t">Rutinas PRO — Adulto Mayor 65+</div>
+        <div class="lock-d">Rutinas adaptadas con ejercicios seguros y progresión gradual especial para 65+. Exclusivo PRO.</div>
+        <a href="https://www.paypal.me/DeybiVillar651/9.99" target="_blank" class="lock-btn">💳 Suscribirme — $9.99/mes</a>
+        <div class="lock-row"><input type="password" class="lock-inp" id="code-mayor" placeholder="Código familiar..."><button class="lock-go" onclick="unlockSec('mayor')">→</button></div>
+        <div class="lock-err" id="err-mayor">Código incorrecto.</div>
+      </div>
+      <div id="body-mayor" style="display:none">
+        <div class="am-badge">🏆 Sección especial 65+. Mismos ejercicios con adaptaciones importantes para tu seguridad y progreso.</div>
+        <div class="card"><div class="ctit">Principios clave para 65+</div>
+          <div class="trow"><div class="tico">🏋️</div><div><div class="tt">Mancuernas en lugar de barra</div><div class="td">En ejercicios de press usa siempre mancuernas. Más seguro para las articulaciones.</div></div></div>
+          <div class="trow"><div class="tico">⚖️</div><div><div class="tt">Peso a tolerancia — 10-12 reps</div><div class="td">El peso que te permita hacer 10-12 repeticiones con buena técnica.</div></div></div>
+          <div class="trow"><div class="tico">📈</div><div><div class="tt">Progresión gradual siempre</div><div class="td">Aunque sea medio kilo más cada semana. La progresión continua es la clave.</div></div></div>
+          <div class="trow"><div class="tico">🚴</div><div><div class="tt">Cardio 2 veces por semana</div><div class="td">Para hombres: mucho cardio baja la testosterona. Máximo 2 sesiones de 25-30 min.</div></div></div>
+          <div class="trow"><div class="tico">😴</div><div><div class="tt">Descanso 48-72 horas</div><div class="td">El cuerpo necesita más tiempo. Nunca el mismo músculo dos días seguidos.</div></div></div>
+        </div>
+        <div class="card"><div class="ctit">Plan semanal adaptado 65+</div>
+          <div class="pday"><div class="pday-t">Lunes · Pecho y Tríceps</div><div class="pday-s">Press con mancuernas · Jalón cuerda · Fondos asistidos — 10-12 reps</div></div>
+          <div class="pday"><div class="pday-t">Martes · Cardio suave 25-30 min</div><div class="pday-s">Caminata o bicicleta estática</div></div>
+          <div class="pday"><div class="pday-t">Miércoles · Espalda y Bíceps</div><div class="pday-s">Jalón al pecho · Remo mancuerna · Curl mancuerna — 10-12 reps</div></div>
+          <div class="pday"><div class="pday-t">Jueves · Descanso activo</div><div class="pday-s">Caminata suave 20 min o estiramientos</div></div>
+          <div class="pday"><div class="pday-t">Viernes · Piernas y Hombros</div><div class="pday-s">Prensa · Extensión · Press mancuernas · Elevaciones — 10-12 reps</div></div>
+        </div>
+        <div class="card"><div class="ctit">Suplementos para 65+</div>
+          <span class="badge bg">Vitamina D3</span><span class="badge bb">Omega-3</span><span class="badge ba">Colágeno</span><span class="badge bg">Calcio</span><span class="badge bb">Magnesio</span><span class="badge ba">Vitamina B12</span>
+        </div>
+        <div class="alr alr-g">La creatina también es segura para adultos mayores — mejora fuerza, masa muscular y función cognitiva.</div>
+      </div>
+    </div>
+    <div id="s-pharma" class="sec">
+      <div class="card"><div class="ctit">Información general — consulta siempre a tu médico</div><div id="pharmalist"></div></div>
+    </div>
+    <div id="s-usuario" class="sec">
+      <div id="login-box">
+        <div class="card">
+          <div class="ctit">Crear mi perfil</div>
+          <div style="font-size:12px;color:#999;margin-bottom:12px">Tu progreso se guarda en este dispositivo</div>
+          <div class="irow"><label class="ilbl">Nombre</label><input type="text" id="reg-nombre" placeholder="Juan Pérez"></div>
+          <div class="irow"><label class="ilbl">Edad</label><input type="number" id="reg-edad" placeholder="42"></div>
+          <div class="frow2">
+            <div><label class="flbl">Peso inicial (kg)</label><input type="number" class="finput" id="reg-peso" placeholder="85"></div>
+            <div><label class="flbl">Estatura (cm)</label><input type="number" class="finput" id="reg-altura" placeholder="175"></div>
+          </div>
+          <div class="irow"><label class="ilbl">Objetivo</label>
+            <select id="reg-obj">
+              <option value="muscle">Ganar músculo</option>
+              <option value="fat">Perder grasa</option>
+              <option value="gain">Subir de peso</option>
+              <option value="health">Salud general</option>
+            </select>
+          </div>
+          <button class="mbtn" onclick="crearPerfil()">Crear mi perfil →</button>
+        </div>
+        <div style="text-align:center;font-size:12px;color:#999;margin:10px 0">¿Ya tienes perfil guardado?</div>
+        <button onclick="cargarPerfil()" style="width:100%;padding:11px;background:transparent;color:#1D9E75;border:1.5px solid #1D9E75;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">Cargar perfil guardado</button>
+      </div>
+      <div id="perfil-box" style="display:none">
+        <div class="prof-head"><div class="av-circle" id="prof-av">DC</div><div>
+          <div style="font-size:17px;font-weight:700" id="prof-nombre">—</div>
+          <div style="font-size:12px;opacity:.85;margin-top:2px" id="prof-obj">—</div>
+          <div style="font-size:11px;opacity:.8;margin-top:4px" id="prof-dias">—</div>
+        </div></div>
+        <div class="utabs">
+          <button class="utab act" onclick="showUtab('resumen',this)">📊</button>
+          <button class="utab" onclick="showUtab('medidas',this)">📏</button>
+          <button class="utab" onclick="showUtab('gym',this)">🏋️</button>
+          <button class="utab" onclick="showUtab('historial',this)">📈</button>
+        </div>
+        <div id="ut-resumen" class="usec act">
+          <div class="sg3" id="res-stats"></div>
+          <div class="card">
+            <div class="ctit" style="display:flex;justify-content:space-between">Peso de hoy
+              <button style="font-size:11px;color:#1D9E75;background:none;border:none;cursor:pointer;font-weight:600;font-family:inherit" onclick="document.getElementById('peso-form').style.display='block'">+ Agregar</button>
+            </div>
+            <div id="peso-form" style="display:none;margin-bottom:10px">
+              <div class="frow2"><div><label class="flbl">Peso (kg)</label><input type="number" class="finput" id="nuevo-peso" step="0.1"></div><div><label class="flbl">Fecha</label><input type="date" class="finput" id="nuevo-fecha"></div></div>
+              <button class="save-btn" onclick="guardarPeso()">Guardar</button>
+              <button class="cancel-btn" onclick="document.getElementById('peso-form').style.display='none'">Cancelar</button>
+              <div class="ok-msg" id="peso-ok">✓ Guardado</div>
+            </div>
+            <div id="peso-list"></div>
+          </div>
+          <div class="card"><div class="ctit">Rutina activa</div><div id="rutina-activa"></div></div>
+          <button onclick="cerrarSesion()" style="width:100%;padding:9px;background:transparent;color:#999;border:1px solid #ddd;border-radius:8px;font-size:12px;cursor:pointer;font-family:inherit;margin-top:6px">Cerrar sesión</button>
+        </div>
+        <div id="ut-medidas" class="usec">
+          <div class="card">
+            <div class="ctit" style="display:flex;justify-content:space-between">Mis medidas
+              <button style="font-size:11px;color:#1D9E75;background:none;border:none;cursor:pointer;font-weight:600;font-family:inherit" onclick="document.getElementById('med-form').style.display='block'">+ Actualizar</button>
+            </div>
+            <div id="med-form" style="display:none;margin-bottom:12px">
+              <div class="frow2"><div><label class="flbl">Pecho (cm)</label><input type="number" class="finput" id="m-pecho" step="0.5"></div><div><label class="flbl">Cintura (cm)</label><input type="number" class="finput" id="m-cintura" step="0.5"></div></div>
+              <div class="frow2"><div><label class="flbl">Cadera (cm)</label><input type="number" class="finput" id="m-cadera" step="0.5"></div><div><label class="flbl">Brazo (cm)</label><input type="number" class="finput" id="m-brazo" step="0.5"></div></div>
+              <div class="frow2"><div><label class="flbl">Muslo (cm)</label><input type="number" class="finput" id="m-muslo" step="0.5"></div><div><label class="flbl">Fecha</label><input type="date" class="finput" id="m-fecha"></div></div>
+              <button class="save-btn" onclick="guardarMedidas()">Guardar</button>
+              <button class="cancel-btn" onclick="document.getElementById('med-form').style.display='none'">Cancelar</button>
+              <div class="ok-msg" id="med-ok">✓ Guardado</div>
+            </div>
+            <div id="medidas-actual"></div>
+          </div>
+        </div>
+        <div id="ut-gym" class="usec">
+          <div class="card">
+            <div class="ctit" style="display:flex;justify-content:space-between">Mis récords
+              <button style="font-size:11px;color:#1D9E75;background:none;border:none;cursor:pointer;font-weight:600;font-family:inherit" onclick="document.getElementById('gym-form').style.display='block'">+ Actualizar</button>
+            </div>
+            <div id="gym-form" style="display:none;margin-bottom:12px">
+              <div id="gym-inputs"></div>
+              <button class="save-btn" onclick="guardarGym()">Guardar</button>
+              <button class="cancel-btn" onclick="document.getElementById('gym-form').style.display='none'">Cancelar</button>
+              <div class="ok-msg" id="gym-ok">✓ Guardado</div>
+            </div>
+            <div id="gym-records"></div>
+          </div>
+        </div>
+        <div id="ut-historial" class="usec">
+          <div class="card"><div class="ctit">Evolución de peso</div><div id="hist-peso"></div></div>
+          <div class="card"><div class="ctit">Progreso de medidas</div><div id="hist-med"></div></div>
+        </div>
+      </div>
+    </div>
+    <div id="s-about" class="sec">
+      <div class="aho"><div class="alo">Fit<span>35+</span></div><br><span class="badge bg">Versión 1.0 · 2025</span></div>
+      <div class="mis"><div class="mis-t">"Creada para ayudar a deportistas y personas de todas las edades a maximizar sus resultados, cuidar su cuerpo y alcanzar sus metas de salud."</div></div>
+      <div class="sg2" style="margin-bottom:12px">
+        <div class="stat"><div class="sv">8</div><div class="sl">Secciones</div></div>
+        <div class="stat"><div class="sv">35+</div><div class="sl">Años exp.</div></div>
+        <div class="stat"><div class="sv">8</div><div class="sl">Idiomas</div></div>
+        <div class="stat"><div class="sv">3</div><div class="sl">Grupos</div></div>
+      </div>
+      <div class="card"><div class="ctit">Quiénes somos</div>
+        <div class="person"><div class="av avd">DC</div><div><div class="pn">Deybi Castillo Villar</div><div class="pr">Fundador y experto en fitness</div><div class="pd">Más de 35 años de experiencia en entrenamiento, nutrición y suplementación deportiva.</div><div class="pc">🇨🇷 Costa Rica · ✉️ deybicastillo@hotmail.com</div></div></div>
+        <div class="person"><div class="av avc">AI</div><div><div class="pn">Claude — Inteligencia Artificial</div><div class="pr">Desarrollador de la aplicación</div><div class="pd">Asistente de IA de Anthropic que diseñó y construyó toda la tecnología de Fit35+.</div><div class="pc">🌐 claude.ai</div></div></div>
+      </div>
+      <div class="copy">© 2025 Fit35+ · Deybi Castillo Villar · Costa Rica<br>Hecho con experiencia real y tecnología IA</div>
+    </div>
+  </div>
+</div>
+
+</div>
+<script>
+// ========== VARIABLES ==========
+var idioma = null, grupo = null;
+var freeQ = 3, isPro = false, chatH = [];
+var nutGoal = 'muscle', mealGoal = 'muscle';
+var injSel = 'shoulder', injZone = 0;
+var mujerObj = 'muscle', glutSem = 'A';
+var perfil = null;
+var FAM = 'Castillo2025';
+var SYS = 'You are the AI Coach of Fit35+, expert in fitness, nutrition and supplementation. 35+ years real gym experience. Direct, practical, motivating. Answer in user language. Max 5 sentences.';
+
+// ========== TRADUCCIONES ==========
+var T = {
+  es:{gtit:'¿Cómo te identificas?',gnh:'Hombre',gsh:'Rutinas masculinas',gnm:'Mujer',gsm:'Rutinas femeninas',gna:'Adulto mayor',gsa:'65+ años',enter:'Entrar →',welcome:'¡Bienvenido a Fit35+!',sub:'Tu entrenador personal con IA',ui:{plan:'Plan semanal',nutobj:'Tu objetivo',genplan:'Generar mi plan',edad:'Edad',peso:'Peso (kg)',altura:'Estatura (cm)',act:'Actividad',ideal:'Peso ideal',supp:'Suplementos recomendados',injtit:'¿Dónde sientes la molestia?',mealtit:'Tu objetivo',lkttit:'Contenido PRO',lktdesc:'Suscríbete por $9.99/mes o ingresa tu código familiar.',lktbtn:'💳 Suscribirme — $9.99/mes',lktcode:'Código familiar...',lkterr:'Código incorrecto.',regttit:'Crear mi perfil',regsub:'Tu progreso se guarda en este dispositivo',regnombre:'Nombre',regedad:'Edad',regpeso:'Peso inicial (kg)',regalt:'Estatura (cm)',regbtn:'Crear mi perfil →',cargar:'Cargar perfil guardado',pesohoy:'Peso de hoy',agregar:'+ Agregar',rutact:'Rutina activa',logout:'Cerrar sesión',mismed:'Mis medidas',actualizar:'+ Actualizar',misrec:'Mis récords',cerrar:'Cancelar',guardar:'Guardar',send:'Enviar',qfree:'preguntas gratis',qacc:'✓ Acceso completo',pwlimit:'¡Límite alcanzado!',pwdesc:'Suscríbete por $9.99/mes para acceso ilimitado.',pwcode:'¿Tienes código familiar?',famcode:'Código...',famwrong:'Código incorrecto.',gluttit:'🍑 Glúteos — Rotación semanal',sema:'Semana A',semb:'Semana B',sed:'Sedentario',lig:'Ligero (1-3 días)',mod:'Moderado (3-5 días)',muy:'Muy activo (6-7 días)'}
+    ,nav_h:['🏠 Inicio','💪 Edades','🥗 Nutrición','🤖 Coach IA','🩹 Lesiones','🍽 Comidas','🏋️ Rutinas','👤 Mi perfil','💊 Farmacología','ℹ️ Acerca de'],nav_m:['🏠 Inicio','🌸 Mi rutina','🥗 Nutrición','🤖 Coach IA','🩹 Lesiones','🍽 Comidas','👤 Mi perfil','💊 Farmacología','ℹ️ Acerca de'],nav_a:['🏠 Inicio','🏆 Mi rutina','🥗 Nutrición','🤖 Coach IA','🩹 Lesiones','🍽 Comidas','👤 Mi perfil','💊 Farmacología','ℹ️ Acerca de'],sec_h:['home','ages','nutrition','coach','injuries','meals','rutinas','usuario','pharma','about'],sec_m:['home','mujeres','nutrition','coach','injuries','meals','usuario','pharma','about'],sec_a:['home','mayor','nutrition','coach','injuries','meals','usuario','pharma','about'],goals:['Ganar músculo','Perder grasa','Subir de peso','Salud general'],chips:['¿Cuánta proteína necesito?','Rutina para perder grasa','Suplementos para 40+','¿Gano músculo a los 50?'],cwelcome:'¡Hola! Soy tu Coach IA de Fit35+. ¿En qué te puedo ayudar hoy?',flag:'🇪🇸',code:'ES'},
+  en:{gtit:'Who are you?',gnh:'Man',gsh:'Male routines',gnm:'Woman',gsm:'Female routines',gna:'Senior',gsa:'65+ years',enter:'Enter →',welcome:'Welcome to Fit35+!',sub:'Your AI personal trainer',ui:{plan:'Weekly plan',nutobj:'Your goal',genplan:'Generate my plan',edad:'Age',peso:'Weight (kg)',altura:'Height (cm)',act:'Activity',ideal:'Ideal weight',supp:'Recommended supplements',injtit:'Where do you feel pain?',mealtit:'Your goal',lkttit:'PRO Content',lktdesc:'Subscribe for $9.99/month or enter your family code.',lktbtn:'💳 Subscribe — $9.99/month',lktcode:'Family code...',lkterr:'Incorrect code.',regttit:'Create my profile',regsub:'Your progress is saved on this device',regnombre:'Full name',regedad:'Age',regpeso:'Starting weight (kg)',regalt:'Height (cm)',regbtn:'Create my profile →',cargar:'Load saved profile',pesohoy:'Today weight',agregar:'+ Add',rutact:'Active routine',logout:'Log out',mismed:'My measurements',actualizar:'+ Update',misrec:'My records',cerrar:'Cancel',guardar:'Save',send:'Send',qfree:'free questions',qacc:'✓ Full access',pwlimit:'Limit reached!',pwdesc:'Subscribe for $9.99/month for unlimited access.',pwcode:'Do you have a family code?',famcode:'Code...',famwrong:'Incorrect code.',gluttit:'🍑 Glutes — Weekly rotation',sema:'Week A',semb:'Week B',sed:'Sedentary',lig:'Light (1-3 days)',mod:'Moderate (3-5 days)',muy:'Very active (6-7 days)'}
+    ,nav_h:['🏠 Home','💪 Ages','🥗 Nutrition','🤖 AI Coach','🩹 Injuries','🍽 Meals','🏋️ Routines','👤 My profile','💊 Pharmacology','ℹ️ About'],nav_m:['🏠 Home','🌸 My routine','🥗 Nutrition','🤖 AI Coach','🩹 Injuries','🍽 Meals','👤 My profile','💊 Pharmacology','ℹ️ About'],nav_a:['🏠 Home','🏆 My routine','🥗 Nutrition','🤖 AI Coach','🩹 Injuries','🍽 Meals','👤 My profile','💊 Pharmacology','ℹ️ About'],sec_h:['home','ages','nutrition','coach','injuries','meals','rutinas','usuario','pharma','about'],sec_m:['home','mujeres','nutrition','coach','injuries','meals','usuario','pharma','about'],sec_a:['home','mayor','nutrition','coach','injuries','meals','usuario','pharma','about'],goals:['Gain muscle','Lose fat','Gain weight','General health'],chips:['How much protein do I need?','Routine to lose fat','Supplements for 40+','Can I gain muscle at 50?'],cwelcome:'Hello! I am your Fit35+ AI Coach. How can I help you today?',flag:'🇺🇸',code:'EN'},
+  pt:{gtit:'Como você se identifica?',gnh:'Homem',gsh:'Rotinas masculinas',gnm:'Mulher',gsm:'Rotinas femininas',gna:'Idoso',gsa:'65+ anos',enter:'Entrar →',welcome:'Bem-vindo ao Fit35+!',sub:'Seu treinador pessoal com IA',ui:{plan:'Plano semanal',nutobj:'Seu objetivo',genplan:'Gerar meu plano',edad:'Idade',peso:'Peso (kg)',altura:'Altura (cm)',act:'Atividade',ideal:'Peso ideal',supp:'Suplementos recomendados',injtit:'Onde você sente dor?',mealtit:'Seu objetivo',lkttit:'Conteúdo PRO',lktdesc:'Assine por $9.99/mês ou insira seu código familiar.',lktbtn:'💳 Assinar — $9.99/mês',lktcode:'Código familiar...',lkterr:'Código incorreto.',regttit:'Criar meu perfil',regsub:'Seu progresso é salvo neste dispositivo',regnombre:'Nome',regedad:'Idade',regpeso:'Peso inicial (kg)',regalt:'Altura (cm)',regbtn:'Criar meu perfil →',cargar:'Carregar perfil salvo',pesohoy:'Peso de hoje',agregar:'+ Adicionar',rutact:'Rotina ativa',logout:'Sair',mismed:'Minhas medidas',actualizar:'+ Atualizar',misrec:'Meus recordes',cerrar:'Cancelar',guardar:'Salvar',send:'Enviar',qfree:'perguntas grátis',qacc:'✓ Acesso completo',pwlimit:'Limite atingido!',pwdesc:'Assine por $9.99/mês para acesso ilimitado.',pwcode:'Tem código familiar?',famcode:'Código...',famwrong:'Código incorreto.',gluttit:'🍑 Glúteos — Rotação semanal',sema:'Semana A',semb:'Semana B',sed:'Sedentário',lig:'Leve (1-3 dias)',mod:'Moderado (3-5 dias)',muy:'Muito ativo (6-7 dias)'}
+    ,nav_h:['🏠 Início','💪 Idades','🥗 Nutrição','🤖 Coach IA','🩹 Lesões','🍽 Refeições','🏋️ Rotinas','👤 Meu perfil','💊 Farmacologia','ℹ️ Sobre nós'],nav_m:['🏠 Início','🌸 Minha rotina','🥗 Nutrição','🤖 Coach IA','🩹 Lesões','🍽 Refeições','👤 Meu perfil','💊 Farmacologia','ℹ️ Sobre nós'],nav_a:['🏠 Início','🏆 Minha rotina','🥗 Nutrição','🤖 Coach IA','🩹 Lesões','🍽 Refeições','👤 Meu perfil','💊 Farmacologia','ℹ️ Sobre nós'],sec_h:['home','ages','nutrition','coach','injuries','meals','rutinas','usuario','pharma','about'],sec_m:['home','mujeres','nutrition','coach','injuries','meals','usuario','pharma','about'],sec_a:['home','mayor','nutrition','coach','injuries','meals','usuario','pharma','about'],goals:['Ganhar músculo','Perder gordura','Ganhar peso','Saúde geral'],chips:['Quanta proteína preciso?','Rotina para perder gordura','Suplementos 40+','Posso ganhar músculo aos 50?'],cwelcome:'Olá! Sou seu Coach IA do Fit35+. Como posso ajudá-lo hoje?',flag:'🇧🇷',code:'PT'},
+  fr:{gtit:'Qui êtes-vous?',gnh:'Homme',gsh:'Routines masculines',gnm:'Femme',gsm:'Routines féminines',gna:'Sénior',gsa:'65+ ans',enter:'Entrer →',welcome:'Bienvenue sur Fit35+!',sub:'Votre coach personnel avec IA',ui:{plan:'Plan hebdomadaire',nutobj:'Votre objectif',genplan:'Générer mon plan',edad:'Âge',peso:'Poids (kg)',altura:'Taille (cm)',act:'Activité',ideal:'Poids idéal',supp:'Suppléments recommandés',injtit:'Où avez-vous mal?',mealtit:'Votre objectif',lkttit:'Contenu PRO',lktdesc:'Abonnez-vous pour 9,99$/mois ou entrez votre code familial.',lktbtn:'💳 S\'abonner — 9,99$/mois',lktcode:'Code familial...',lkterr:'Code incorrect.',regttit:'Créer mon profil',regsub:'Vos progrès sont sauvegardés sur cet appareil',regnombre:'Nom',regedad:'Âge',regpeso:'Poids initial (kg)',regalt:'Taille (cm)',regbtn:'Créer mon profil →',cargar:'Charger profil sauvegardé',pesohoy:'Poids aujourd hui',agregar:'+ Ajouter',rutact:'Routine active',logout:'Déconnexion',mismed:'Mes mesures',actualizar:'+ Mettre à jour',misrec:'Mes records',cerrar:'Annuler',guardar:'Sauvegarder',send:'Envoyer',qfree:'questions gratuites',qacc:'✓ Accès complet',pwlimit:'Limite atteinte!',pwdesc:'Abonnez-vous pour 9,99$/mois.',pwcode:'Vous avez un code familial?',famcode:'Code...',famwrong:'Code incorrect.',gluttit:'🍑 Fessiers — Rotation hebdomadaire',sema:'Semaine A',semb:'Semaine B',sed:'Sédentaire',lig:'Léger (1-3 jours)',mod:'Modéré (3-5 jours)',muy:'Très actif (6-7 jours)'}
+    ,nav_h:['🏠 Accueil','💪 Âges','🥗 Nutrition','🤖 Coach IA','🩹 Blessures','🍽 Repas','🏋️ Routines','👤 Mon profil','💊 Pharmacologie','ℹ️ À propos'],nav_m:['🏠 Accueil','🌸 Ma routine','🥗 Nutrition','🤖 Coach IA','🩹 Blessures','🍽 Repas','👤 Mon profil','💊 Pharmacologie','ℹ️ À propos'],nav_a:['🏠 Accueil','🏆 Ma routine','🥗 Nutrition','🤖 Coach IA','🩹 Blessures','🍽 Repas','👤 Mon profil','💊 Pharmacologie','ℹ️ À propos'],sec_h:['home','ages','nutrition','coach','injuries','meals','rutinas','usuario','pharma','about'],sec_m:['home','mujeres','nutrition','coach','injuries','meals','usuario','pharma','about'],sec_a:['home','mayor','nutrition','coach','injuries','meals','usuario','pharma','about'],goals:['Gagner du muscle','Perdre du gras','Prendre du poids','Santé générale'],chips:['Combien de protéines?','Perdre du gras','Suppléments 40+','Muscle à 50 ans?'],cwelcome:'Bonjour! Je suis votre Coach IA Fit35+. Comment puis-je vous aider?',flag:'🇫🇷',code:'FR'},
+  de:{gtit:'Wer bist du?',gnh:'Mann',gsh:'Männliche Routinen',gnm:'Frau',gsm:'Weibliche Routinen',gna:'Senior',gsa:'65+ Jahre',enter:'Eintreten →',welcome:'Willkommen bei Fit35+!',sub:'Ihr KI-Personaltrainer',ui:{plan:'Wochenplan',nutobj:'Dein Ziel',genplan:'Meinen Plan erstellen',edad:'Alter',peso:'Gewicht (kg)',altura:'Größe (cm)',act:'Aktivität',ideal:'Idealgewicht',supp:'Empfohlene Nahrungsergänzung',injtit:'Wo tut es weh?',mealtit:'Dein Ziel',lkttit:'PRO Inhalt',lktdesc:'Abonniere für $9.99/Monat oder gib deinen Familiencode ein.',lktbtn:'💳 Abonnieren — $9.99/Monat',lktcode:'Familiencode...',lkterr:'Falscher Code.',regttit:'Mein Profil erstellen',regsub:'Dein Fortschritt wird auf diesem Gerät gespeichert',regnombre:'Name',regedad:'Alter',regpeso:'Startgewicht (kg)',regalt:'Größe (cm)',regbtn:'Mein Profil erstellen →',cargar:'Gespeichertes Profil laden',pesohoy:'Gewicht heute',agregar:'+ Hinzufügen',rutact:'Aktive Routine',logout:'Abmelden',mismed:'Meine Maße',actualizar:'+ Aktualisieren',misrec:'Meine Rekorde',cerrar:'Abbrechen',guardar:'Speichern',send:'Senden',qfree:'kostenlose Fragen',qacc:'✓ Vollzugriff',pwlimit:'Limit erreicht!',pwdesc:'Abonniere für $9.99/Monat für unbegrenzte Nutzung.',pwcode:'Hast du einen Familiencode?',famcode:'Code...',famwrong:'Falscher Code.',gluttit:'🍑 Gesäß — Wöchentliche Rotation',sema:'Woche A',semb:'Woche B',sed:'Sitzend',lig:'Leicht (1-3 Tage)',mod:'Moderat (3-5 Tage)',muy:'Sehr aktiv (6-7 Tage)'}
+    ,nav_h:['🏠 Start','💪 Alter','🥗 Ernährung','🤖 KI-Coach','🩹 Verletzungen','🍽 Mahlzeiten','🏋️ Routinen','👤 Mein Profil','💊 Pharmakologie','ℹ️ Über uns'],nav_m:['🏠 Start','🌸 Meine Routine','🥗 Ernährung','🤖 KI-Coach','🩹 Verletzungen','🍽 Mahlzeiten','👤 Mein Profil','💊 Pharmakologie','ℹ️ Über uns'],nav_a:['🏠 Start','🏆 Meine Routine','🥗 Ernährung','🤖 KI-Coach','🩹 Verletzungen','🍽 Mahlzeiten','👤 Mein Profil','💊 Pharmakologie','ℹ️ Über uns'],sec_h:['home','ages','nutrition','coach','injuries','meals','rutinas','usuario','pharma','about'],sec_m:['home','mujeres','nutrition','coach','injuries','meals','usuario','pharma','about'],sec_a:['home','mayor','nutrition','coach','injuries','meals','usuario','pharma','about'],goals:['Muskeln aufbauen','Fett verlieren','Gewicht zunehmen','Gesundheit'],chips:['Wie viel Protein?','Fettabbau-Routine','Nahrungsergänzung 40+','Muskeln mit 50?'],cwelcome:'Hallo! Ich bin dein Fit35+ KI-Coach. Wie kann ich dir helfen?',flag:'🇩🇪',code:'DE'},
+  it:{gtit:'Chi sei?',gnh:'Uomo',gsh:'Routine maschili',gnm:'Donna',gsm:'Routine femminili',gna:'Anziano',gsa:'65+ anni',enter:'Entrare →',welcome:'Benvenuto su Fit35+!',sub:'Il tuo personal trainer con IA',ui:{plan:'Piano settimanale',nutobj:'Il tuo obiettivo',genplan:'Genera il mio piano',edad:'Età',peso:'Peso (kg)',altura:'Altezza (cm)',act:'Attività',ideal:'Peso ideale',supp:'Integratori consigliati',injtit:'Dove senti dolore?',mealtit:'Il tuo obiettivo',lkttit:'Contenuto PRO',lktdesc:'Abbonati per $9.99/mese o inserisci il tuo codice familiare.',lktbtn:'💳 Abbonati — $9.99/mese',lktcode:'Codice familiare...',lkterr:'Codice errato.',regttit:'Crea il mio profilo',regsub:'I tuoi progressi sono salvati su questo dispositivo',regnombre:'Nome',regedad:'Età',regpeso:'Peso iniziale (kg)',regalt:'Altezza (cm)',regbtn:'Crea il mio profilo →',cargar:'Carica profilo salvato',pesohoy:'Peso oggi',agregar:'+ Aggiungi',rutact:'Routine attiva',logout:'Disconnetti',mismed:'Le mie misure',actualizar:'+ Aggiorna',misrec:'I miei record',cerrar:'Annulla',guardar:'Salva',send:'Invia',qfree:'domande gratuite',qacc:'✓ Accesso completo',pwlimit:'Limite raggiunto!',pwdesc:'Abbonati per $9.99/mese per accesso illimitato.',pwcode:'Hai un codice familiare?',famcode:'Codice...',famwrong:'Codice errato.',gluttit:'🍑 Glutei — Rotazione settimanale',sema:'Settimana A',semb:'Settimana B',sed:'Sedentario',lig:'Leggero (1-3 giorni)',mod:'Moderato (3-5 giorni)',muy:'Molto attivo (6-7 giorni)'}
+    ,nav_h:['🏠 Home','💪 Età','🥗 Nutrizione','🤖 Coach IA','🩹 Infortuni','🍽 Pasti','🏋️ Routine','👤 Il mio profilo','💊 Farmacologia','ℹ️ Chi siamo'],nav_m:['🏠 Home','🌸 La mia routine','🥗 Nutrizione','🤖 Coach IA','🩹 Infortuni','🍽 Pasti','👤 Il mio profilo','💊 Farmacologia','ℹ️ Chi siamo'],nav_a:['🏠 Home','🏆 La mia routine','🥗 Nutrizione','🤖 Coach IA','🩹 Infortuni','🍽 Pasti','👤 Il mio profilo','💊 Farmacologia','ℹ️ Chi siamo'],sec_h:['home','ages','nutrition','coach','injuries','meals','rutinas','usuario','pharma','about'],sec_m:['home','mujeres','nutrition','coach','injuries','meals','usuario','pharma','about'],sec_a:['home','mayor','nutrition','coach','injuries','meals','usuario','pharma','about'],goals:['Guadagnare muscoli','Perdere grasso','Aumentare peso','Salute generale'],chips:['Quante proteine?','Routine perdere grasso','Integratori 40+','Muscoli a 50 anni?'],cwelcome:'Ciao! Sono il tuo Coach IA di Fit35+. Come posso aiutarti?',flag:'🇮🇹',code:'IT'},
+  zh:{gtit:'你是谁?',gnh:'男性',gsh:'男性训练',gnm:'女性',gsm:'女性训练',gna:'老年人',gsa:'65岁以上',enter:'进入 →',welcome:'欢迎使用 Fit35+！',sub:'您的AI私人教练',ui:{plan:'每周计划',nutobj:'你的目标',genplan:'生成我的计划',edad:'年龄',peso:'体重 (kg)',altura:'身高 (cm)',act:'活动',ideal:'理想体重',supp:'推荐补充剂',injtit:'哪里感到疼痛?',mealtit:'你的目标',lkttit:'PRO内容',lktdesc:'每月订阅$9.99或输入家庭码。',lktbtn:'💳 订阅 — $9.99/月',lktcode:'家庭码...',lkterr:'代码错误。',regttit:'创建我的档案',regsub:'你的进度保存在此设备上',regnombre:'姓名',regedad:'年龄',regpeso:'初始体重 (kg)',regalt:'身高 (cm)',regbtn:'创建我的档案 →',cargar:'加载已保存的档案',pesohoy:'今日体重',agregar:'+ 添加',rutact:'当前训练',logout:'退出',mismed:'我的测量',actualizar:'+ 更新',misrec:'我的记录',cerrar:'取消',guardar:'保存',send:'发送',qfree:'免费问题',qacc:'✓ 完整访问',pwlimit:'已达限制！',pwdesc:'每月订阅$9.99无限使用。',pwcode:'有家庭码吗?',famcode:'代码...',famwrong:'代码错误。',gluttit:'🍑 臀部 — 每周轮换',sema:'A周',semb:'B周',sed:'久坐',lig:'轻度(1-3天)',mod:'中度(3-5天)',muy:'非常活跃(6-7天)'}
+    ,nav_h:['🏠 首页','💪 年龄','🥗 营养','🤖 AI教练','🩹 受伤','🍽 餐饮','🏋️ 训练','👤 我的档案','💊 药理学','ℹ️ 关于我们'],nav_m:['🏠 首页','🌸 我的训练','🥗 营养','🤖 AI教练','🩹 受伤','🍽 餐饮','👤 我的档案','💊 药理学','ℹ️ 关于我们'],nav_a:['🏠 首页','🏆 我的训练','🥗 营养','🤖 AI教练','🩹 受伤','🍽 餐饮','👤 我的档案','💊 药理学','ℹ️ 关于我们'],sec_h:['home','ages','nutrition','coach','injuries','meals','rutinas','usuario','pharma','about'],sec_m:['home','mujeres','nutrition','coach','injuries','meals','usuario','pharma','about'],sec_a:['home','mayor','nutrition','coach','injuries','meals','usuario','pharma','about'],goals:['增肌','减脂','增重','健康'],chips:['我需要多少蛋白质?','减脂训练','40+营养补充','50岁能增肌吗?'],cwelcome:'你好！我是你的Fit35+ AI教练。今天我能帮你什么？',flag:'🇨🇳',code:'ZH'},
+  ja:{gtit:'あなたは誰ですか？',gnh:'男性',gsh:'男性ルーティン',gnm:'女性',gsm:'女性ルーティン',gna:'シニア',gsa:'65歳以上',enter:'入る →',welcome:'Fit35+へようこそ！',sub:'AIパーソナルトレーナー',ui:{plan:'週間プラン',nutobj:'あなたの目標',genplan:'プランを生成する',edad:'年齢',peso:'体重 (kg)',altura:'身長 (cm)',act:'活動',ideal:'理想体重',supp:'おすすめサプリメント',injtit:'どこが痛いですか?',mealtit:'あなたの目標',lkttit:'PROコンテンツ',lktdesc:'月$9.99で登録、またはファミリーコードを入力してください。',lktbtn:'💳 登録する — $9.99/月',lktcode:'ファミリーコード...',lkterr:'コードが間違っています。',regttit:'プロフィールを作成',regsub:'進捗はこのデバイスに保存されます',regnombre:'名前',regedad:'年齢',regpeso:'開始体重 (kg)',regalt:'身長 (cm)',regbtn:'プロフィールを作成 →',cargar:'保存済みプロフィールを読み込む',pesohoy:'今日の体重',agregar:'+ 追加',rutact:'アクティブルーティン',logout:'ログアウト',mismed:'私の測定',actualizar:'+ 更新',misrec:'私の記録',cerrar:'キャンセル',guardar:'保存',send:'送信',qfree:'無料の質問',qacc:'✓ フルアクセス',pwlimit:'制限に達しました！',pwdesc:'月$9.99で無制限アクセス。',pwcode:'ファミリーコードはありますか?',famcode:'コード...',famwrong:'コードが間違っています。',gluttit:'🍑 お尻 — 週間ローテーション',sema:'週A',semb:'週B',sed:'座りがち',lig:'軽い(1-3日)',mod:'中程度(3-5日)',muy:'非常に活発(6-7日)'}
+    ,nav_h:['🏠 ホーム','💪 年齢','🥗 栄養','🤖 AIコーチ','🩹 ケガ','🍽 食事','🏋️ ルーティン','👤 プロフィール','💊 薬理学','ℹ️ 私たちについて'],nav_m:['🏠 ホーム','🌸 マイルーティン','🥗 栄養','🤖 AIコーチ','🩹 ケガ','🍽 食事','👤 プロフィール','💊 薬理学','ℹ️ 私たちについて'],nav_a:['🏠 ホーム','🏆 マイルーティン','🥗 栄養','🤖 AIコーチ','🩹 ケガ','🍽 食事','👤 プロフィール','💊 薬理学','ℹ️ 私たちについて'],sec_h:['home','ages','nutrition','coach','injuries','meals','rutinas','usuario','pharma','about'],sec_m:['home','mujeres','nutrition','coach','injuries','meals','usuario','pharma','about'],sec_a:['home','mayor','nutrition','coach','injuries','meals','usuario','pharma','about'],goals:['筋肉をつける','脂肪を落とす','体重を増やす','健康'],chips:['たんぱく質はどのくらい?','脂肪燃焼','40+サプリ','50歳で筋肉は?'],cwelcome:'こんにちは！Fit35+ AIコーチです。今日はどのようにお手伝いできますか？',flag:'🇯🇵',code:'JA'}
+};
+
+function L(k){return (T[idioma]&&T[idioma][k]!==undefined)?T[idioma][k]:T.es[k];}
+
+// ========== FLUJO DE PÁGINAS (igual que test_flujo que funcionó) ==========
+function elegir(cod, nom, flag, cont) {
+  idioma = cod;
+  document.querySelectorAll('.litem').forEach(function(i){i.style.borderColor='#ddd';i.style.background='#fff';});
+  document.getElementById('li-'+cod).style.borderColor='#1D9E75';
+  document.getElementById('li-'+cod).style.background='#E1F5EE';
+  document.getElementById('lang-ind').textContent='✓ '+nom;
+  document.getElementById('btn-lang').textContent=cont;
+}
+
+function irPag2() {
+  if(!idioma){alert('Selecciona un idioma / Please select a language');return;}
+  // Traducir página de grupo
+  document.getElementById('grupo-tit').textContent = L('gtit');
+  document.getElementById('gn-h').textContent = L('gnh');
+  document.getElementById('gs-h').textContent = L('gsh');
+  document.getElementById('gn-m').textContent = L('gnm');
+  document.getElementById('gs-m').textContent = L('gsm');
+  document.getElementById('gn-a').textContent = L('gna');
+  document.getElementById('gs-a').textContent = L('gsa');
+  document.getElementById('btn-grupo').textContent = L('enter');
+  document.getElementById('btn-grupo').style.opacity = '0.4';
+  document.getElementById('btn-grupo').style.cursor = 'default';
+  grupo = null;
+  document.querySelectorAll('.gitem').forEach(function(i){i.style.borderColor='#ddd';i.style.background='#fff';});
+  // Cambiar página
+  document.getElementById('pag-lang').classList.remove('vis');
+  document.getElementById('pag-grupo').classList.add('vis');
+}
+
+function elegirGrupo(g) {
+  grupo = g;
+  document.querySelectorAll('.gitem').forEach(function(i){i.style.borderColor='#ddd';i.style.background='#fff';});
+  document.getElementById('g-'+g).style.borderColor='#1D9E75';
+  document.getElementById('g-'+g).style.background='#E1F5EE';
+  document.getElementById('btn-grupo').style.opacity='1';
+  document.getElementById('btn-grupo').style.cursor='pointer';
+}
+
+function irApp() {
+  if(!grupo)return;
+  try {
+  // Construir app con idioma y grupo correctos
+  var L2 = T[idioma]||T.es;
+  var navKey = 'nav_'+(grupo==='hombre'?'h':grupo==='mujer'?'m':'a');
+  var secKey = 'sec_'+(grupo==='hombre'?'h':grupo==='mujer'?'m':'a');
+  var tabs = L2[navKey];
+  var secs = L2[secKey];
+  // Topbar
+  document.getElementById('lpill').textContent = L2.flag+' '+L2.code;
+  // Hero
+  document.getElementById('hw').textContent = L2.welcome;
+  document.getElementById('hs').textContent = L2.sub;
+  // Nav
+  var nav = document.getElementById('navbar');
+  nav.innerHTML = '';
+  for(var i=0;i<tabs.length;i++){
+    var btn = document.createElement('button');
+    btn.className = 'ntab'+(i===0?' act':'');
+    btn.textContent = tabs[i];
+    btn.onclick = (function(s,b){return function(){mostrarSec(s,b);};})(secs[i],btn);
+    nav.appendChild(btn);
+  }
+  setTimeout(checkNavArrows, 100);
+  // Coach welcome
+  document.getElementById('cmsgs').innerHTML='<div class="mai"><div class="mav">💪</div><div class="bbl bai">'+L2.cwelcome+'</div></div>';
+  // Traducir UI
+  traducirUI(L2);
+  // Construir contenido
+  construirHomeStats();
+  construirPlanSemanal();
+  construirNutGoals();
+  construirMealGoals();
+  construirChips();
+  construirHomeMenu();
+  construirLesiones();
+  construirFarma();
+  construirRutinas();
+  construirMujeres();
+  construirGymInputs();
+  var hoy=new Date().toISOString().split('T')[0];
+  var f1=document.getElementById('nuevo-fecha');
+  var f2=document.getElementById('m-fecha');
+  if(f1)f1.value=hoy;
+  if(f2)f2.value=hoy;
+  // Mostrar app
+  document.getElementById('pag-grupo').classList.remove('vis');
+  document.getElementById('pag-app').classList.add('vis');
+  } catch(err) { alert('ERROR en irApp: '+err.message); }
+}
+
+function activarConCodigo() {
+  var inp = document.getElementById('plan-code-input');
+  if(!inp) return;
+  var v = inp.value.trim();
+  if(v === FAM) {
+    isPro = true; freeQ = 999;
+    // Unlock all sections
+    ['mujeres','mayor'].forEach(function(sid){
+      var lock=document.getElementById('lock-'+sid);
+      var body=document.getElementById('body-'+sid);
+      if(lock)lock.style.display='none';
+      if(body)body.style.display='block';
+    });
+    actualizarQ();
+    // Rebuild plan semanal and refresh current section
+    construirPlanSemanal();
+    // Also rebuild mujeres/mayor if we're in those sections
+    construirMujeres();
+    // Show success briefly
+    var err = document.getElementById('plan-code-err');
+    if(err){ err.style.color='#0F6E56'; err.textContent='✓ ¡Acceso activado!'; err.style.display='block'; }
+  } else {
+    var err = document.getElementById('plan-code-err');
+    if(err){ err.style.color='#A32D2D'; err.textContent='Código incorrecto.'; err.style.display='block'; }
+    if(inp) inp.value='';
+    setTimeout(function(){ var e=document.getElementById('plan-code-err'); if(e)e.style.display='none'; }, 3000);
+  }
+}
+
+function scrollNav(amount){
+  var nav=document.getElementById('navbar');
+  if(nav){ nav.scrollLeft += amount; }
+}
+function checkNavArrows() {
+  var nav = document.getElementById('navbar');
+  var left = document.getElementById('nav-left');
+  var right = document.getElementById('nav-right');
+  if(!nav||!left||!right) return;
+  left.style.display = nav.scrollLeft > 10 ? 'block' : 'none';
+  right.style.display = nav.scrollLeft < (nav.scrollWidth - nav.clientWidth - 10) ? 'block' : 'none';
+}
+
+function volverInicio() {
+  // Go back to lang/group selection
+  document.getElementById('pag-app').classList.remove('vis');
+  document.getElementById('pag-grupo').classList.remove('vis');
+  document.getElementById('pag-lang').classList.add('vis');
+  document.querySelectorAll('.sec').forEach(function(x){x.classList.remove('act');});
+  var home=document.getElementById('s-home');if(home)home.classList.add('act');
+  document.querySelectorAll('.ntab').forEach(function(x){x.classList.remove('act');});
+  var first=document.querySelector('.ntab');if(first)first.classList.add('act');
+}
+function scrollNav(dir) {
+  var nav = document.getElementById('navbar');
+  if(nav) nav.scrollLeft += dir * 120;
+}
+
+function scrollNav(dir) {
+  var nav = document.getElementById('navbar');
+  if(nav) nav.scrollLeft += dir * 120;
+}
+
+function scrollNav(dir) {
+  var nav = document.getElementById('navbar');
+  if(nav) nav.scrollLeft += dir * 120;
+}
+
+function irHome() {
+  // Go to Home tab inside app
+  document.querySelectorAll('.sec').forEach(function(x){x.classList.remove('act');});
+  var home=document.getElementById('s-home');if(home)home.classList.add('act');
+  document.querySelectorAll('.ntab').forEach(function(x){x.classList.remove('act');});
+  var first=document.querySelector('.ntab');if(first)first.classList.add('act');
+}
+function volverLang() {
+  document.getElementById('pag-grupo').classList.remove('vis');
+  document.getElementById('pag-lang').classList.add('vis');
+}
+
+function mostrarSec(s,btn){
+  document.querySelectorAll('.sec').forEach(function(x){x.classList.remove('act');});
+  document.getElementById('s-'+s).classList.add('act');
+  document.querySelectorAll('.ntab').forEach(function(x){x.classList.remove('act');});
+  if(btn)btn.classList.add('act');
+  if(s==='meals')construirComidas();
+  // Enforce paywall for mujeres and mayor
+  if(s==='mujeres'||s==='mayor'){
+    var lock=document.getElementById('lock-'+s);
+    var body=document.getElementById('body-'+s);
+    if(!isPro){
+      if(lock)lock.style.display='block';
+      if(body)body.style.display='none';
+    } else {
+      if(lock)lock.style.display='none';
+      if(body)body.style.display='block';
+    }
+  }
+}
+function irSec(s,i){
+  document.querySelectorAll('.sec').forEach(function(x){x.classList.remove('act');});
+  document.getElementById('s-'+s).classList.add('act');
+  var tabs=document.querySelectorAll('.ntab');
+  document.querySelectorAll('.ntab').forEach(function(x){x.classList.remove('act');});
+  if(tabs[i])tabs[i].classList.add('act');
+  if(s==='meals')construirComidas();
+  // Enforce paywall for mujeres and mayor
+  if(s==='mujeres'||s==='mayor'){
+    var lock=document.getElementById('lock-'+s);
+    var body=document.getElementById('body-'+s);
+    if(!isPro){
+      if(lock)lock.style.display='block';
+      if(body)body.style.display='none';
+    } else {
+      if(lock)lock.style.display='none';
+      if(body)body.style.display='block';
+    }
+  }
+}
+
+// ========== TRADUCIR UI ==========
+function traducirUI(L2){
+  var u = L2.ui || T.es.ui;
+  function s(id,v){var e=document.getElementById(id);if(e)e.textContent=v;}
+  function si(id,v){var e=document.getElementById(id);if(e)e.innerHTML=v;}
+  function sp(id,v){var e=document.getElementById(id);if(e)e.placeholder=v;}
+  function sv(id,v){var e=document.getElementById(id);if(e)e.value=v;}
+  // Nutrition section
+  s('plan-tit', u.plan);
+  var nutacts = document.getElementById('nact');
+  if(nutacts){nutacts.options[0].text=u.sed;nutacts.options[1].text=u.lig;nutacts.options[2].text=u.mod;nutacts.options[3].text=u.muy;}
+  var gp = document.getElementById('btn-genplan')||document.querySelector('#s-nutrition .mbtn');
+  if(gp)gp.textContent=u.genplan;
+  // Coach
+  s('csendbtn', u.send);
+  sp('cinp', u.send+'...');
+  // Paywall coach
+  s('qcount', '3 '+u.qfree);
+  // User profile
+  s('reg-tit-txt', u.regttit);
+  s('reg-sub-txt', u.regsub);
+  var reglbls = document.querySelectorAll('.reg-lbl');
+  // Lock boxes - rutinas
+  ['normal','mentzer','yates','cambio'].forEach(function(id){
+    var lock=document.getElementById('lrt-'+id);
+    if(lock){
+      var lt=lock.querySelector('.lock-t');var ld=lock.querySelector('.lock-d');
+      var lb=lock.querySelector('.lock-btn');var inp=lock.querySelector('.lock-inp');
+      var err=lock.querySelector('.lock-err');
+      if(lt)lt.textContent=u.lkttit+' — '+({normal:'Rutinas',mentzer:'Mike Mentzer',yates:'Dorian Yates',cambio:'Cambio'}[id]);
+      if(ld)ld.textContent=u.lktdesc;
+      if(lb)lb.textContent=u.lktbtn;
+      if(inp)inp.placeholder=u.lktcode;
+      if(err)err.textContent=u.lkterr;
+    }
+  });
+  // Lock boxes - mujeres y mayor
+  ['mujeres','mayor'].forEach(function(id){
+    var lock=document.getElementById('lock-'+id);
+    if(lock){
+      var lt=lock.querySelector('.lock-t');var ld=lock.querySelector('.lock-d');
+      var lb=lock.querySelector('.lock-btn');var inp=lock.querySelector('.lock-inp');
+      if(ld)ld.textContent=u.lktdesc;
+      if(lb)lb.textContent=u.lktbtn;
+      if(inp)inp.placeholder=u.lktcode;
+    }
+  });
+  // Glúteos semana buttons
+  var sa=document.getElementById('sem-a');var sb=document.getElementById('sem-b');
+  if(sa)sa.textContent=u.sema;if(sb)sb.textContent=u.semb;
+  // Paywall coach text
+  var pwt=document.querySelector('.pw-t');var pwd=document.querySelector('.pw-d');
+  var pwb=document.querySelector('.pw-btn');var pwpl=document.querySelector('.pw-inp');
+  if(pwt)pwt.textContent=u.pwlimit;
+  if(pwd)pwd.textContent=u.pwdesc;
+  if(pwb)pwb.textContent=u.lktbtn;
+  if(pwpl)pwpl.placeholder=u.famcode;
+  var pwfl=document.querySelector('.pw > div:last-child > div:first-child');
+  if(pwfl)pwfl.textContent=u.pwcode;
+}
+
+
+// ========== TRADUCTOR DE EJERCICIOS ==========
+function tx(key) {
+  var maps = {
+    en:{
+      'Días esta semana':'Days this week','Adherencia':'Adherence','Sesiones':'Sessions','Progreso':'Progress',
+      'Press declinado':'Decline press','Press inclinado':'Incline press','Aperturas':'Flyes','Fondos':'Dips',
+      'Jalón con cuerda':'Rope pushdown','Press agarre cerrado':'Close-grip press','Jalón al pecho':'Lat pulldown',
+      'Remo':'Row','Pull over':'Pullover','Curl barra Z':'EZ bar curl','Curl martillo':'Hammer curl',
+      'Curl concentrado':'Concentration curl','Extensión cuádriceps':'Leg extension','Flexión isquiotibiales':'Leg curl',
+      'Prensa de piernas':'Leg press','Press militar':'Military press','Elevación lateral':'Lateral raise',
+      'Elevación frontal':'Front raise','Remo máquina/mancuerna':'Machine row','Hip thrust':'Hip thrust',
+      'Patada trasera polea':'Cable kickback','Peso muerto rumano':'Romanian deadlift','Sentadilla sumo':'Sumo squat',
+      'Día 1 — Pecho y Tríceps':'Day 1 — Chest & Triceps','Lunes o Martes':'Monday or Tuesday',
+      'Día 2 — Espalda y Bíceps':'Day 2 — Back & Biceps','Miércoles o Jueves':'Wednesday or Thursday',
+      'Día 3 — Piernas y Hombros':'Day 3 — Legs & Shoulders','Viernes o Sábado':'Friday or Saturday',
+      '💪 PECHO':'💪 CHEST','🦾 TRÍCEPS':'🦾 TRICEPS','🏋️ ESPALDA':'🏋️ BACK',
+      '💪 BÍCEPS':'💪 BICEPS','🦵 PIERNAS':'🦵 LEGS','🏆 HOMBROS':'🏆 SHOULDERS',
+      'Serie':'Set','Ejercicio':'Exercise','Tipo':'Type','Cal.':'Warmup','Trabajo':'Work','Al fallo':'To failure','Aprox.':'Approach',
+      '3 días por semana · Descansa 1 día entre sesiones · Calienta 10 min':'3 days/week · Rest 1 day between sessions · Warm up 10 min',
+      'Semana — Pecho':'Week — Chest','Semana — Espalda':'Week — Back','Semana — Piernas':'Week — Legs',
+      'Semana — Bíceps':'Week — Biceps','Semana — Tríceps':'Week — Triceps','Semana — Hombros':'Week — Shoulders',
+      'Lunes — Espalda':'Monday — Back','Martes — Pecho y Bíceps':'Tuesday — Chest & Biceps',
+      'Jueves — Piernas':'Thursday — Legs','Viernes — Hombros y Tríceps':'Friday — Shoulders & Triceps'
+    },
+    pt:{
+      'Días esta semana':'Dias esta semana','Adherencia':'Aderência','Sesiones':'Sessões','Progreso':'Progresso',
+      'Press declinado':'Press declinado','Press inclinado':'Press inclinado','Aperturas':'Abertura','Fondos':'Paralelas',
+      'Jalón con cuerda':'Puxada corda','Press agarre cerrado':'Press pegada fechada','Jalón al pecho':'Puxada alta',
+      'Remo':'Remada','Pull over':'Pullover','Curl barra Z':'Rosca barra Z','Curl martillo':'Rosca martelo',
+      'Curl concentrado':'Rosca concentrada','Extensión cuádriceps':'Extensão quadríceps','Flexión isquiotibiales':'Flexão posterior',
+      'Prensa de piernas':'Leg press','Press militar':'Desenvolvimento militar','Elevación lateral':'Elevação lateral',
+      'Elevación frontal':'Elevação frontal','Remo máquina/mancuerna':'Remada','Hip thrust':'Hip thrust',
+      'Patada trasera polea':'Chute traseiro','Peso muerto rumano':'Terra romeno','Sentadilla sumo':'Agachamento sumô',
+      'Día 1 — Pecho y Tríceps':'Dia 1 — Peito e Tríceps','Lunes o Martes':'Segunda ou Terça',
+      'Día 2 — Espalda y Bíceps':'Dia 2 — Costas e Bíceps','Miércoles o Jueves':'Quarta ou Quinta',
+      'Día 3 — Piernas y Hombros':'Dia 3 — Pernas e Ombros','Viernes o Sábado':'Sexta ou Sábado',
+      '💪 PECHO':'💪 PEITO','🦾 TRÍCEPS':'🦾 TRÍCEPS','🏋️ ESPALDA':'🏋️ COSTAS',
+      '💪 BÍCEPS':'💪 BÍCEPS','🦵 PIERNAS':'🦵 PERNAS','🏆 HOMBROS':'🏆 OMBROS',
+      'Serie':'Série','Ejercicio':'Exercício','Tipo':'Tipo','Cal.':'Aquec.','Trabajo':'Trabalho','Al fallo':'Até falhar','Aprox.':'Aprox.',
+      '3 días por semana · Descansa 1 día entre sesiones · Calienta 10 min':'3 dias/semana · Descanse 1 dia entre sessões · Aqueça 10 min'
+    },
+    fr:{
+      'Días esta semana':'Jours cette semaine','Adherencia':'Adhérence','Sesiones':'Séances','Progreso':'Progrès',
+      'Press declinado':'Développé décliné','Press inclinado':'Développé incliné','Aperturas':'Écarté','Fondos':'Dips',
+      'Jalón con cuerda':'Pushdown corde','Press agarre cerrado':'Développé serré','Jalón al pecho':'Tirage poulie haute',
+      'Remo':'Rowing','Pull over':'Pull-over','Curl barra Z':'Curl barre Z','Curl martillo':'Curl marteau',
+      'Curl concentrado':'Curl concentré','Extensión cuádriceps':'Extension quadriceps','Flexión isquiotibiales':'Flexion ischio',
+      'Prensa de piernas':'Presse jambes','Press militar':'Développé militaire','Elevación lateral':'Élévation latérale',
+      'Elevación frontal':'Élévation frontale','Remo máquina/mancuerna':'Rowing machine','Hip thrust':'Hip thrust',
+      'Patada trasera polea':'Kick arrière','Peso muerto rumano':'Soulevé roumain','Sentadilla sumo':'Squat sumo',
+      'Día 1 — Pecho y Tríceps':'Jour 1 — Pectoraux & Triceps','Lunes o Martes':'Lundi ou Mardi',
+      'Día 2 — Espalda y Bíceps':'Jour 2 — Dos & Biceps','Miércoles o Jueves':'Mercredi ou Jeudi',
+      'Día 3 — Piernas y Hombros':'Jour 3 — Jambes & Épaules','Viernes o Sábado':'Vendredi ou Samedi',
+      '💪 PECHO':'💪 PECTORAUX','🦾 TRÍCEPS':'🦾 TRICEPS','🏋️ ESPALDA':'🏋️ DOS',
+      '💪 BÍCEPS':'💪 BICEPS','🦵 PIERNAS':'🦵 JAMBES','🏆 HOMBROS':'🏆 ÉPAULES',
+      'Serie':'Série','Ejercicio':'Exercice','Tipo':'Type','Cal.':'Échauff.','Trabajo':'Travail','Al fallo':'À l échec','Aprox.':'Approche',
+      '3 días por semana · Descansa 1 día entre sesiones · Calienta 10 min':'3 jours/semaine · Repos 1 jour entre séances · Échauffez-vous 10 min'
+    },
+    de:{
+      'Días esta semana':'Tage diese Woche','Adherencia':'Einhaltung','Sesiones':'Einheiten','Progreso':'Fortschritt',
+      'Press declinado':'Schrägbankdrücken-','Press inclinado':'Schrägbankdrücken+','Aperturas':'Fliegende','Fondos':'Dips',
+      'Jalón con cuerda':'Seildrücken','Press agarre cerrado':'Enges Drücken','Jalón al pecho':'Latziehen',
+      'Remo':'Rudern','Pull over':'Pullover','Curl barra Z':'EZ-Curl','Curl martillo':'Hammercurl',
+      'Curl concentrado':'Konzentrationscurl','Extensión cuádriceps':'Beinstrecker','Flexión isquiotibiales':'Beinbeuger',
+      'Prensa de piernas':'Beinpresse','Press militar':'Schulterdrücken','Elevación lateral':'Seitheben',
+      'Elevación frontal':'Frontheben','Remo máquina/mancuerna':'Maschinen Rudern','Hip thrust':'Hüftheben',
+      'Patada trasera polea':'Kabelkick','Peso muerto rumano':'Rum. Kreuzheben','Sentadilla sumo':'Sumo-Kniebeuge',
+      'Día 1 — Pecho y Tríceps':'Tag 1 — Brust & Trizeps','Lunes o Martes':'Montag oder Dienstag',
+      'Día 2 — Espalda y Bíceps':'Tag 2 — Rücken & Bizeps','Miércoles o Jueves':'Mittwoch oder Donnerstag',
+      'Día 3 — Piernas y Hombros':'Tag 3 — Beine & Schultern','Viernes o Sábado':'Freitag oder Samstag',
+      '💪 PECHO':'💪 BRUST','🦾 TRÍCEPS':'🦾 TRIZEPS','🏋️ ESPALDA':'🏋️ RÜCKEN',
+      '💪 BÍCEPS':'💪 BIZEPS','🦵 PIERNAS':'🦵 BEINE','🏆 HOMBROS':'🏆 SCHULTERN',
+      'Serie':'Satz','Ejercicio':'Übung','Tipo':'Typ','Cal.':'Aufwärm.','Trabajo':'Arbeit','Al fallo':'Bis Versagen','Aprox.':'Annäh.',
+      '3 días por semana · Descansa 1 día entre sesiones · Calienta 10 min':'3 Tage/Woche · 1 Tag Pause zwischen Einheiten · 10 min aufwärmen'
+    },
+    it:{
+      'Días esta semana':'Giorni questa settimana','Adherencia':'Aderenza','Sesiones':'Sessioni','Progreso':'Progresso',
+      'Press declinado':'Panca declinata','Press inclinado':'Panca inclinata','Aperturas':'Croci','Fondos':'Dip',
+      'Jalón con cuerda':'Pushdown corda','Press agarre cerrado':'Panca presa stretta','Jalón al pecho':'Lat machine',
+      'Remo':'Rematore','Pull over':'Pull-over','Curl barra Z':'Curl bilanciere Z','Curl martillo':'Curl martello',
+      'Curl concentrado':'Curl concentrato','Extensión cuádriceps':'Leg extension','Flexión isquiotibiales':'Leg curl',
+      'Prensa de piernas':'Leg press','Press militar':'Lento avanti','Elevación lateral':'Alzate laterali',
+      'Elevación frontal':'Alzate frontali','Remo máquina/mancuerna':'Rematore macchina','Hip thrust':'Hip thrust',
+      'Patada trasera polea':'Calcio posteriore','Peso muerto rumano':'Stacco romeno','Sentadilla sumo':'Squat sumo',
+      'Día 1 — Pecho y Tríceps':'Giorno 1 — Petto & Tricipiti','Lunes o Martes':'Lunedì o Martedì',
+      'Día 2 — Espalda y Bíceps':'Giorno 2 — Schiena & Bicipiti','Miércoles o Jueves':'Mercoledì o Giovedì',
+      'Día 3 — Piernas y Hombros':'Giorno 3 — Gambe & Spalle','Viernes o Sábado':'Venerdì o Sabato',
+      '💪 PECHO':'💪 PETTO','🦾 TRÍCEPS':'🦾 TRICIPITI','🏋️ ESPALDA':'🏋️ SCHIENA',
+      '💪 BÍCEPS':'💪 BICIPITI','🦵 PIERNAS':'🦵 GAMBE','🏆 HOMBROS':'🏆 SPALLE',
+      'Serie':'Serie','Ejercicio':'Esercizio','Tipo':'Tipo','Cal.':'Riscald.','Trabajo':'Lavoro','Al fallo':'Al cedimento','Aprox.':'Avvicin.',
+      '3 días por semana · Descansa 1 día entre sesiones · Calienta 10 min':'3 giorni/settimana · Riposo 1 giorno tra le sessioni · 10 min di riscaldamento'
+    },
+    zh:{
+      'Días esta semana':'本周天数','Adherencia':'坚持率','Sesiones':'训练次数','Progreso':'进度',
+      'Press declinado':'下斜卧推','Press inclinado':'上斜卧推','Aperturas':'飞鸟','Fondos':'双杠臂屈伸',
+      'Jalón con cuerda':'绳索下压','Press agarre cerrado':'窄握卧推','Jalón al pecho':'高位下拉',
+      'Remo':'划船','Pull over':'直臂下拉','Curl barra Z':'Z杠弯举','Curl martillo':'锤式弯举',
+      'Curl concentrado':'集中弯举','Extensión cuádriceps':'腿部伸展','Flexión isquiotibiales':'腿弯举',
+      'Prensa de piernas':'腿举','Press militar':'推举','Elevación lateral':'侧平举',
+      'Elevación frontal':'前平举','Remo máquina/mancuerna':'划船机','Hip thrust':'臀推',
+      'Patada trasera polea':'绳索后踢','Peso muerto rumano':'罗马尼亚硬拉','Sentadilla sumo':'相扑深蹲',
+      'Día 1 — Pecho y Tríceps':'第1天 — 胸部和三头肌','Lunes o Martes':'周一或周二',
+      'Día 2 — Espalda y Bíceps':'第2天 — 背部和二头肌','Miércoles o Jueves':'周三或周四',
+      'Día 3 — Piernas y Hombros':'第3天 — 腿部和肩部','Viernes o Sábado':'周五或周六',
+      '💪 PECHO':'💪 胸部','🦾 TRÍCEPS':'🦾 三头肌','🏋️ ESPALDA':'🏋️ 背部',
+      '💪 BÍCEPS':'💪 二头肌','🦵 PIERNAS':'🦵 腿部','🏆 HOMBROS':'🏆 肩部',
+      'Serie':'组','Ejercicio':'练习','Tipo':'类型','Cal.':'热身','Trabajo':'训练','Al fallo':'力竭','Aprox.':'接近',
+      '3 días por semana · Descansa 1 día entre sesiones · Calienta 10 min':'每周3天 · 每次间隔1天休息 · 热身10分钟'
+    },
+    ja:{
+      'Días esta semana':'今週の日数','Adherencia':'継続率','Sesiones':'セッション','Progreso':'進捗',
+      'Press declinado':'デクラインプレス','Press inclinado':'インクラインプレス','Aperturas':'フライ','Fondos':'ディップス',
+      'Jalón con cuerda':'ローププッシュダウン','Press agarre cerrado':'ナローグリッププレス','Jalón al pecho':'ラットプルダウン',
+      'Remo':'ロウイング','Pull over':'プルオーバー','Curl barra Z':'EZバーカール','Curl martillo':'ハンマーカール',
+      'Curl concentrado':'コンセントレーションカール','Extensión cuádriceps':'レッグエクステンション','Flexión isquiotibiales':'レッグカール',
+      'Prensa de piernas':'レッグプレス','Press militar':'ミリタリープレス','Elevación lateral':'サイドレイズ',
+      'Elevación frontal':'フロントレイズ','Remo máquina/mancuerna':'マシンロウ','Hip thrust':'ヒップスラスト',
+      'Patada trasera polea':'ケーブルキックバック','Peso muerto rumano':'ルーマニアンデッドリフト','Sentadilla sumo':'スモウスクワット',
+      'Día 1 — Pecho y Tríceps':'Day 1 — 胸 & 三頭筋','Lunes o Martes':'月曜か火曜',
+      'Día 2 — Espalda y Bíceps':'Day 2 — 背中 & 二頭筋','Miércoles o Jueves':'水曜か木曜',
+      'Día 3 — Piernas y Hombros':'Day 3 — 脚 & 肩','Viernes o Sábado':'金曜か土曜',
+      '💪 PECHO':'💪 胸','🦾 TRÍCEPS':'🦾 三頭筋','🏋️ ESPALDA':'🏋️ 背中',
+      '💪 BÍCEPS':'💪 二頭筋','🦵 PIERNAS':'🦵 脚','🏆 HOMBROS':'🏆 肩',
+      'Serie':'セット','Ejercicio':'エクササイズ','Tipo':'タイプ','Cal.':'ウォームアップ','Trabajo':'ワーク','Al fallo':'限界まで','Aprox.':'アプローチ',
+      '3 días por semana · Descansa 1 día entre sesiones · Calienta 10 min':'週3日 · セッション間1日休む · 10分ウォームアップ'
+    }
+  };
+  if(idioma==='es'||!maps[idioma])return key;
+  return maps[idioma][key]||key;
+}
+// ========== PLAN SEMANAL ==========
+function construirHomeStats(){
+  var el = document.getElementById('home-stats');
+  if(!el) return;
+  el.innerHTML = 
+    '<div class="stat"><div class="sv">3</div><div class="sl">'+tx('Días esta semana')+'</div></div>'+
+    '<div class="stat"><div class="sv">87%</div><div class="sl">'+tx('Adherencia')+'</div></div>'+
+    '<div class="stat"><div class="sv">42</div><div class="sl">'+tx('Sesiones')+'</div></div>'+
+    '<div class="stat"><div class="sv">-4kg</div><div class="sl">'+tx('Progreso')+'</div></div>';
+}
+
+function construirPlanSemanal(){
+  var d=function(day,name,ex){return '<div class="pday"><div class="pday-t">'+tx(day)+' · '+tx(name)+'</div><div class="pday-s">'+ex+'</div></div>';};
+  var lock='<div style="background:#FAECE7;border:1.5px solid #F0997B;border-radius:12px;padding:14px;text-align:center;margin-top:10px">'+
+    '<div style="font-size:26px;margin-bottom:6px">🔒</div>'+
+    '<div style="font-size:13px;font-weight:700;color:#993C1D;margin-bottom:4px">Plan completo — PRO</div>'+
+    '<div style="font-size:11px;color:#712B13;line-height:1.5;margin-bottom:10px">Accede al plan completo suscribiéndote o ingresando tu código.</div>'+
+    '<a href="https://www.paypal.me/DeybiVillar651/9.99" target="_blank" style="display:block;background:#1D9E75;color:#fff;padding:11px;border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;margin-bottom:8px">💳 Suscribirme — $9.99/mes</a>'+
+    '<div style="font-size:10px;color:#993C1D;margin-bottom:8px">Pago seguro vía PayPal · Luego ingresa tu código abajo</div>'+
+    '<div style="border-top:1px solid #F0997B;padding-top:10px;text-align:left">'+
+    '<div style="font-size:11px;color:#993C1D;margin-bottom:6px;font-weight:600">¿Ya pagaste o tienes código? Ingrésalo aquí:</div>'+
+    '<div style="display:flex;gap:6px">'+
+    '<input type="password" id="plan-code-input" placeholder="Código..." style="flex:1;padding:8px 10px;font-size:13px;border:1px solid #F0997B;border-radius:8px;font-family:inherit">'+
+    '<button onclick="activarConCodigo()" style="background:#993C1D;color:#fff;border:none;padding:8px 14px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">→</button>'+
+    '</div>'+
+    '<div id="plan-code-err" style="font-size:11px;color:#A32D2D;margin-top:4px;display:none">Código incorrecto.</div>'+
+    '</div>'+
+    '</div>';
+  var planes={
+    hombre:d('Lunes','Pecho y Tríceps',tx('Press declinado')+' · '+tx('Press inclinado')+' · '+tx('Aperturas')+' · '+tx('Fondos')+' · '+tx('Jalón con cuerda')+' · '+tx('Press agarre cerrado'))+d('Miércoles','Espalda y Bíceps',tx('Jalón al pecho')+' · '+tx('Remo')+' · '+tx('Pull over')+' · '+tx('Curl barra Z')+' · '+tx('Curl martillo')+' · '+tx('Curl concentrado'))+d('Viernes','Piernas y Hombros',tx('Extensión cuádriceps')+' · '+tx('Flexión isquiotibiales')+' · '+tx('Prensa de piernas')+' · '+tx('Elevación lateral')+' · '+tx('Elevación frontal')+' · '+tx('Press militar')),
+    mujer:isPro?d('Lunes','Tren superior',tx('Press agarre cerrado')+' · '+tx('Remo')+' · '+tx('Fondos')+' · '+tx('Curl martillo'))+d('Martes','Glúteos semana A o B',tx('Hip thrust')+' + '+tx('Patada trasera polea')+' / '+tx('Peso muerto rumano')+' + '+tx('Sentadilla sumo'))+d('Jueves','Piernas completo',tx('Prensa de piernas')+' · '+tx('Extensión cuádriceps')+' · '+tx('Flexión isquiotibiales'))+d('Viernes','Glúteos + cardio 30 min','Ejercicios de la semana + cardio'):d('Lunes','Tren superior',tx('Press agarre cerrado')+' · '+tx('Remo')+' · '+tx('Fondos'))+lock,
+    mayor:isPro?d('Lunes','Pecho y Tríceps',tx('Press agarre cerrado')+' · '+tx('Jalón con cuerda')+' · '+tx('Fondos')+' — 10-12 reps')+d('Martes','Cardio suave','25-30 min')+d('Miércoles','Espalda y Bíceps',tx('Jalón al pecho')+' · '+tx('Remo')+' · '+tx('Curl martillo')+' — 10-12 reps')+d('Viernes','Piernas y Hombros',tx('Prensa de piernas')+' · '+tx('Extensión cuádriceps')+' · '+tx('Press militar')+' · '+tx('Elevación lateral')+' — 10-12 reps'):d('Lunes','Pecho y Tríceps',tx('Press agarre cerrado')+' · '+tx('Jalón con cuerda')+' · '+tx('Fondos'))+lock
+  };
+  document.getElementById('plan-semanal').innerHTML=planes[grupo]||planes.hombre;
+}
+
+// ========== NUTRICION ==========
+function construirNutGoals(){
+  var goals=L('goals');var vals=['muscle','fat','gain','health'];var html='';
+  for(var i=0;i<goals.length;i++)html+='<div class="gbtn'+(i===0?' act':'')+'" onclick="setNutGoal(\''+vals[i]+'\',this)">'+goals[i]+'</div>';
+  document.getElementById('nutgoals').innerHTML=html;
+}
+function setNutGoal(g,el){nutGoal=g;document.querySelectorAll('#nutgoals .gbtn').forEach(function(b){b.classList.remove('act');});el.classList.add('act');document.getElementById('planres').className='rbox';}
+function calcIMC(){
+  var p=parseFloat(document.getElementById('npeso').value);var h=parseFloat(document.getElementById('naltura').value);if(!p||!h)return;
+  var imc=p/((h/100)*(h/100));var st=imc<18.5?'Bajo peso':imc<25?'Normal':imc<30?'Sobrepeso':'Obesidad';var col=imc<18.5?'#854F0B':imc<25?'#0F6E56':imc<30?'#854F0B':'#A32D2D';
+  document.getElementById('imcv').textContent=imc.toFixed(1);document.getElementById('imcs').textContent=st;document.getElementById('imcs').style.color=col;
+  document.getElementById('imci').textContent=Math.round(22.5*((h/100)*(h/100)))+' kg';document.getElementById('imcrow').style.display='grid';
+}
+function genPlan(){
+  var p=parseFloat(document.getElementById('npeso').value);var h=parseFloat(document.getElementById('naltura').value);var e=parseFloat(document.getElementById('nedad').value);var a=parseFloat(document.getElementById('nact').value);
+  if(!p||!h||!e){alert('Por favor completa todos los campos');return;}
+  var tdee=Math.round((10*p+6.25*h-5*e+5)*a);var prot=Math.round(p*2.2);var items=[],cls='g';
+  if(nutGoal==='muscle'){document.getElementById('res-tit').textContent='Plan para ganar músculo';items=['Calorías: '+(tdee+400)+' kcal/día','Proteína: '+prot+'g/día','Pesas 4 días/semana','Creatina 5g + whey post-entreno','Meta: +1-2 kg músculo/mes'];}
+  else if(nutGoal==='fat'){document.getElementById('res-tit').textContent='Plan para perder grasa';items=['Calorías: '+(tdee-350)+' kcal/día','Proteína: '+prot+'g/día — no la reduzcas','Cardio zona 2: 35 min 4-5x/semana','Pesas mínimo 3 días/semana','Meta: -0.5 a 1 kg grasa/semana'];}
+  else if(nutGoal==='gain'){cls='a';document.getElementById('res-tit').textContent='Plan para subir de peso';items=['Calorías: '+(tdee+500)+' kcal/día','Proteína: '+prot+'g/día','Pesas 4 días/semana','Carbohidratos complejos en cada comida','Meta: +1-3 kg/mes'];}
+  else{document.getElementById('res-tit').textContent='Plan para salud general';items=['Calorías: '+(tdee-100)+' kcal/día','Proteína: '+Math.round(p*1.8)+'g/día','Omega-3, antioxidantes, fibra','Reducir alcohol, sodio, ultraprocesados','Hidratación: 2.5L agua/día'];}
+  document.getElementById('res-body').innerHTML=items.map(function(i){return '<div class="ritem">'+i+'</div>';}).join('');
+  document.getElementById('planres').className='rbox '+cls+' vis';
+}
+
+// ========== COACH IA ==========
+function construirChips(){
+  var chips=L('chips');
+  document.getElementById('chiplist').innerHTML=chips.map(function(c){return '<div class="chip" onclick="usarChip(\''+c.replace(/'/g,"\\'")+'\')">'+c+'</div>';}).join('');
+}
+function usarChip(t){document.getElementById('cinp').value=t;doChat();}
+async function doChat(){
+  var inp=document.getElementById('cinp');var msg=inp.value.trim();if(!msg)return;
+  if(freeQ<=0&&!isPro){document.getElementById('chatwrap').style.opacity='0.4';document.getElementById('chatwrap').style.pointerEvents='none';document.getElementById('paywall').className='pw vis';return;}
+  agregarMsg('u',msg);inp.value='';document.getElementById('csendbtn').disabled=true;
+  chatH.push({role:'user',content:msg});var lid=mostrarCarga();
+  try{
+    var r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:SYS,messages:chatH})});
+    var d=await r.json();var reply=d.content&&d.content[0]?d.content[0].text:'Lo siento, intenta de nuevo.';
+    quitarCarga(lid);agregarMsg('ai',reply);chatH.push({role:'assistant',content:reply});
+    if(!isPro){freeQ--;actualizarQ();}
+  }catch(e){quitarCarga(lid);agregarMsg('ai','Error de conexión. Por favor intenta de nuevo.');}
+  document.getElementById('csendbtn').disabled=false;
+}
+function actualizarQ(){var el=document.getElementById('qcount');if(isPro){el.textContent='✓ Acceso completo';return;}if(freeQ>0){el.textContent=freeQ+' preguntas gratis';}else{el.textContent='Sin preguntas gratis';document.getElementById('chatwrap').style.opacity='0.4';document.getElementById('chatwrap').style.pointerEvents='none';document.getElementById('paywall').className='pw vis';}}
+function checkFam(){
+  var v=document.getElementById('faminp').value.trim();
+  if(v===FAM){
+    isPro=true;freeQ=999;
+    document.getElementById('paywall').className='pw';
+    document.getElementById('chatwrap').style.opacity='1';
+    document.getElementById('chatwrap').style.pointerEvents='auto';
+    actualizarQ();
+    agregarMsg('ai','¡Acceso familiar activado! Coach IA ilimitado. 💪');
+    ['mujeres','mayor'].forEach(function(sid){
+      var lock=document.getElementById('lock-'+sid);
+      var body=document.getElementById('body-'+sid);
+      if(lock)lock.style.display='none';
+      if(body)body.style.display='block';
+    });
+  } else {
+    document.getElementById('famerr').style.display='block';
+    document.getElementById('faminp').value='';
+    setTimeout(function(){document.getElementById('famerr').style.display='none';},3000);
+  }
+}
+function unlockSec(id){
+  var codeEl=document.getElementById('code-'+id);
+  var v=codeEl?codeEl.value.trim():'';
+  if(v===FAM||isPro){
+    isPro=true;freeQ=999;
+    // Unlock ALL locked sections
+    ['mujeres','mayor'].forEach(function(sid){
+      var lock=document.getElementById('lock-'+sid);
+      var body=document.getElementById('body-'+sid);
+      if(lock)lock.style.display='none';
+      if(body)body.style.display='block';
+    });
+    actualizarQ();
+  } else {
+    var err=document.getElementById('err-'+id);
+    if(err){err.style.display='block';setTimeout(function(){err.style.display='none';},3000);}
+    if(codeEl)codeEl.value='';
+  }
+}
+function agregarMsg(r,t){var c=document.getElementById('cmsgs'),d=document.createElement('div');d.className=r==='ai'?'mai':'mu';d.innerHTML=r==='ai'?'<div class="mav">💪</div><div class="bbl bai">'+t+'</div>':'<div class="bbl bu">'+t+'</div>';c.appendChild(d);c.scrollTop=c.scrollHeight;}
+function mostrarCarga(){var c=document.getElementById('cmsgs'),id='l'+Date.now(),d=document.createElement('div');d.className='mai';d.id=id;d.innerHTML='<div class="mav">💪</div><div class="bbl bai"><div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>';c.appendChild(d);c.scrollTop=c.scrollHeight;return id;}
+function quitarCarga(id){var el=document.getElementById(id);if(el)el.remove();}
+
+// ========== EDADES ==========
+function setEdad(m){document.getElementById('ab-y').className='abtn'+(m==='y'?' ay':'');document.getElementById('ab-a').className='abtn'+(m==='a'?' aa':'');document.getElementById('edad-y').style.display=m==='y'?'block':'none';document.getElementById('edad-a').style.display=m==='a'?'block':'none';}
+
+// ========== LESIONES ==========
+var INJ={shoulder:{icon:'🦾',name:'Hombro',zones:['Delantera','Trasera','Arriba'],data:[[{t:'❄️ Frío 48-72h',d:'Hielo 15-20 min cada 2-3h. Nunca directo a la piel.'},{t:'🔥 Calor día 3',d:'Relaja los tendones del manguito rotador.'},{t:'🧘 Fisioterapia',d:'Ejercicios de manguito rotador. Evita press con dolor.'},{a:'r',m:'Si no puedes levantar el brazo, ve al médico.'}],[{t:'❄️ Frío 48h',d:'Posible infraespinoso o redondo menor.'},{t:'🔥 Calor húmedo día 3',d:'Toalla húmeda caliente + estiramientos suaves.'},{t:'🧘 Fisioterapia',d:'Masaje en puntos gatillo.'}],[{t:'❄️ Frío 48h',d:'Posible bursitis. Reposo mínimo 1 semana.'},{t:'🧘 Fisioterapia',d:'Corrientes eléctricas + fortalecimiento.'},{a:'r',m:'Deformidad visible — ve al médico de inmediato.'}]]},knee:{icon:'🦵',name:'Rodilla',zones:['Delantera','Trasera','Lado interno'],data:[[{t:'❄️ Hielo 48-72h',d:'20 min cada 3h. Eleva la pierna.'},{t:'🧘 Fisioterapia',d:'Ejercicios excéntricos de cuádriceps.'},{a:'g',m:'Reemplaza sentadillas por leg press mientras te recuperas.'}],[{t:'❄️ Hielo 48h',d:'Posible quiste de Baker o isquiotibiales.'},{t:'🔥 Calor día 3',d:'Calor húmedo + estiramientos suaves.'},{a:'r',m:'Bulto visible detrás de la rodilla — ve al médico.'}],[{t:'❄️ Hielo 48h',d:'Posible ligamento colateral medial.'},{t:'🧘 Fisioterapia',d:'Reposo 1-2 semanas.'},{a:'r',m:'Requiere evaluación médica para descartar desgarro.'}]]},back:{icon:'🫀',name:'Espalda',zones:['Lumbar','Media','Alta'],data:[[{t:'❄️ Frío 48h luego calor',d:'Camina suave cada hora para no rigidizar.'},{t:'🧘 Core',d:'Fisioterapia + plancha. Sin peso muerto con dolor.'},{a:'r',m:'Dolor que baja por la pierna — médico urgente.'}],[{t:'🔥 Calor desde el inicio',d:'Dolor muscular. Calor húmedo es el mejor tratamiento.'},{t:'🧘 Masaje',d:'Masaje profundo + corrección postural.'}],[{t:'❄️ Frío 24-48h',d:'Si hubo movimiento brusco. Evita rotaciones.'},{t:'🔥 Calor día 2',d:'Ducha caliente + estiramientos laterales.'},{a:'r',m:'Hormigueo en brazos — médico de inmediato.'}]]},elbow:{icon:'💪',name:'Codo',zones:['Codo de tenista','Codo de golfista'],data:[[{t:'❄️ Frío post-entreno',d:'Hielo 15 min. Epicondilitis lateral.'},{t:'🧘 Fisioterapia',d:'Banda de epicondilitis + ondas de choque.'}],[{t:'❄️ Frío fase aguda',d:'Epicondilitis medial — lado interno.'},{t:'🧘 Fisioterapia',d:'Reposo 1-2 semanas + fisioterapia.'}]]},ankle:{icon:'🦶',name:'Tobillo',zones:['Esguince'],data:[[{t:'❄️ Protocolo PRICE',d:'Proteger · Reposo · Hielo · Compresión · Elevación.'},{t:'🔥 Día 4',d:'Calor + movilidad en círculos.'},{t:'🧘 Propiocepción',d:'Fisioterapia para evitar recaídas.'},{a:'r',m:'No puedes apoyar el pie — urgencias, posible fractura.'}]]},neck:{icon:'🧠',name:'Cuello',zones:['Cuello'],data:[[{t:'🔥 Calor para contracturas',d:'Ducha caliente + movimientos suaves.'},{t:'❄️ Frío si fue golpe',d:'Hielo primeras 24-48h.'},{t:'🧘 Fisioterapia',d:'Masaje cervical + almohada ergonómica.'},{a:'r',m:'Hormigueo en brazos — médico de inmediato.'}]]}};
+function construirLesiones(){var parts=['shoulder','knee','back','elbow','ankle','neck'];var html='';for(var i=0;i<parts.length;i++){var p=parts[i];html+='<div class="bpart'+(p===injSel?' act':'')+'" onclick="selLesion(\''+p+'\')"><div style="font-size:22px">'+INJ[p].icon+'</div><div style="font-size:11px;color:#666;margin-top:3px">'+INJ[p].name+'</div></div>';}document.getElementById('bodygrid').innerHTML=html;renderLesion();}
+function selLesion(p){injSel=p;injZone=0;construirLesiones();}
+function renderLesion(){var inj=INJ[injSel];var html='<div class="stabs">';for(var i=0;i<inj.zones.length;i++)html+='<div class="stab'+(i===injZone?' act':'')+'" onclick="injZone='+i+';renderLesion()">'+inj.zones[i]+'</div>';html+='</div>';var det=inj.data[injZone]||inj.data[0];for(var i=0;i<det.length;i++){var d=det[i];if(d.a)html+='<div class="alr alr-'+d.a+'">'+d.m+'</div>';else html+='<div class="trow"><div class="tico">'+d.t.split(' ')[0]+'</div><div><div class="tt">'+d.t.split(' ').slice(1).join(' ')+'</div><div class="td">'+d.d+'</div></div></div>';}document.getElementById('injdet').innerHTML=html;}
+
+// ========== COMIDAS ==========
+var MEALS={muscle:[{t:'Desayuno · 7am',n:'Tortilla de 4 huevos + avena con plátano',d:'Huevos revueltos · Avena con leche + plátano + miel',m:['P: 42g','C: 65g','G: 18g'],c:'mb'},{t:'Almuerzo · 12:30pm',n:'Pechuga de pollo + arroz integral + vegetales',d:'200g pollo · 1 taza arroz integral · Brócoli al vapor',m:['P: 52g','C: 58g','G: 12g'],c:'ml'},{t:'Cena · 7pm',n:'Salmón al horno + papa + ensalada',d:'180g salmón · 1 papa mediana · Ensalada con aguacate',m:['P: 44g','C: 35g','G: 22g'],c:'md'}],fat:[{t:'Desayuno · 7am',n:'Huevos con vegetales + café negro',d:'3 huevos · Espinaca, tomate, cebolla · Sin pan',m:['P: 24g','C: 8g','G: 16g'],c:'mb'},{t:'Almuerzo · 12pm',n:'Ensalada grande de pollo + atún',d:'150g pechuga · 1 lata atún · Lechuga, tomate, pepino',m:['P: 58g','C: 12g','G: 14g'],c:'ml'},{t:'Cena · 6:30pm',n:'Pescado al vapor + vegetales salteados',d:'180g tilapia · Zucchini, brócoli, zanahoria',m:['P: 40g','C: 14g','G: 10g'],c:'md'}],gain:[{t:'Desayuno · 7am',n:'Desayuno hipercalórico — 800 kcal',d:'4 huevos + 2 tostadas + aguacate + leche entera + plátano',m:['P: 38g','C: 85g','G: 28g'],c:'mb'},{t:'Almuerzo · 12:30pm',n:'Arroz + carne + frijoles + plátano',d:'1.5 tazas arroz · 200g carne · Frijoles · Plátano maduro',m:['P: 55g','C: 95g','G: 18g'],c:'ml'},{t:'Cena · 7pm',n:'Pasta con carne + pan + leche con cacao',d:'200g pasta · 150g carne molida · Pan integral',m:['P: 48g','C: 105g','G: 20g'],c:'md'}],health:[{t:'Desayuno · 7am',n:'Smoothie verde + avena con frutos rojos',d:'Avena con leche de almendras · Fresas, arándanos',m:['P: 18g','C: 72g','G: 10g'],c:'mb'},{t:'Almuerzo · 12:30pm',n:'Bowl de quinoa + pollo + aguacate',d:'3/4 taza quinoa · 150g pollo · Aguacate · Tomate cherry',m:['P: 42g','C: 48g','G: 18g'],c:'ml'},{t:'Cena · 7pm',n:'Sopa de lentejas + pan integral',d:'Lentejas con zanahoria, apio y cúrcuma',m:['P: 28g','C: 55g','G: 8g'],c:'md'}]};
+function construirMealGoals(){var goals=L('goals');var vals=['muscle','fat','gain','health'];var html='';for(var i=0;i<goals.length;i++)html+='<div class="gbtn'+(i===0?' act':'')+'" onclick="setMealGoal(\''+vals[i]+'\',this)">'+goals[i]+'</div>';document.getElementById('mealgoals').innerHTML=html;}
+function setMealGoal(g,el){mealGoal=g;document.querySelectorAll('#mealgoals .gbtn').forEach(function(b){b.classList.remove('act');});el.classList.add('act');construirComidas();}
+function construirComidas(){var meals=MEALS[mealGoal];var html='';for(var i=0;i<meals.length;i++){var m=meals[i];html+='<div class="'+m.c+'"><div class="mtime">'+m.t+'</div><div class="mfood">'+m.n+'</div><div class="mdet">'+m.d+'</div><div class="macros">'+m.m.map(function(mac,j){return '<span class="mac '+(j===0?'mp':j===1?'mc':'mg')+'">'+mac+'</span>';}).join('')+'</div></div>';}document.getElementById('mealsout').innerHTML=html;}
+
+// ========== HOME MENU ==========
+function construirHomeMenu(){
+  var L2=T[idioma]||T.es;
+  var navKey='nav_'+(grupo==='hombre'?'h':grupo==='mujer'?'m':'a');
+  var secKey='sec_'+(grupo==='hombre'?'h':grupo==='mujer'?'m':'a');
+  var tabs=L2[navKey];var secs=L2[secKey];var html='';
+  for(var i=1;i<Math.min(tabs.length,9);i++){var icon=tabs[i].split(' ')[0];var name=tabs[i].slice(tabs[i].indexOf(' ')+1);html+='<div class="mcard" onclick="irSec(\''+secs[i]+'\','+i+')"><div class="micon">'+icon+'</div><div class="mname">'+name+'</div></div>';}
+  document.getElementById('homemenu').innerHTML=html;
+}
+
+// ========== SVG EJERCICIOS ==========
+var ESVG={'Press declinado':'<svg viewBox="0 0 90 72" width="100%"><rect x="10" y="50" width="70" height="5" rx="2" fill="#5DCAA5" opacity=".4"/><rect x="8" y="54" width="5" height="13" rx="2" fill="#888" opacity=".4"/><rect x="77" y="54" width="5" height="13" rx="2" fill="#888" opacity=".4"/><rect x="15" y="28" width="60" height="4" rx="2" fill="#333"/><circle cx="15" cy="30" r="5" fill="#222"/><circle cx="75" cy="30" r="5" fill="#222"/><ellipse cx="45" cy="45" rx="13" ry="5" fill="#1D9E75" opacity=".7"/><circle cx="45" cy="37" r="7" fill="#F5C4B3"/><line x1="38" y1="42" x2="20" y2="32" stroke="#1D9E75" stroke-width="3" stroke-linecap="round"/><line x1="52" y1="42" x2="70" y2="32" stroke="#1D9E75" stroke-width="3" stroke-linecap="round"/><path d="M45 25 L45 19" stroke="#EF9F27" stroke-width="1.5" stroke-linecap="round" marker-end="url(#a)"/><defs><marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M2 1L8 5L2 9" fill="none" stroke="#EF9F27" stroke-width="1.5"/></marker></defs></svg>','Press inclinado':'<svg viewBox="0 0 90 72" width="100%"><rect x="15" y="24" width="60" height="4" rx="2" fill="#333"/><circle cx="15" cy="26" r="5" fill="#222"/><circle cx="75" cy="26" r="5" fill="#222"/><ellipse cx="40" cy="48" rx="13" ry="5" fill="#1D9E75" opacity=".7" transform="rotate(-10,40,48)"/><circle cx="36" cy="38" r="7" fill="#F5C4B3"/><line x1="30" y1="42" x2="18" y2="28" stroke="#1D9E75" stroke-width="3" stroke-linecap="round"/><line x1="48" y1="44" x2="65" y2="28" stroke="#1D9E75" stroke-width="3" stroke-linecap="round"/><path d="M45 22 L45 16" stroke="#EF9F27" stroke-width="1.5" stroke-linecap="round" marker-end="url(#b)"/><defs><marker id="b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M2 1L8 5L2 9" fill="none" stroke="#EF9F27" stroke-width="1.5"/></marker></defs></svg>','Aperturas':'<svg viewBox="0 0 90 72" width="100%"><ellipse cx="45" cy="43" rx="13" ry="5" fill="#1D9E75" opacity=".7"/><circle cx="45" cy="35" r="7" fill="#F5C4B3"/><line x1="32" y1="41" x2="10" y2="35" stroke="#1D9E75" stroke-width="3" stroke-linecap="round"/><line x1="58" y1="41" x2="80" y2="35" stroke="#1D9E75" stroke-width="3" stroke-linecap="round"/><circle cx="10" cy="35" r="5" fill="#333"/><circle cx="80" cy="35" r="5" fill="#333"/><path d="M28 33 Q20 24 24 19" stroke="#EF9F27" stroke-width="1.5" fill="none" stroke-linecap="round" marker-end="url(#c)"/><defs><marker id="c" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M2 1L8 5L2 9" fill="none" stroke="#EF9F27" stroke-width="1.5"/></marker></defs></svg>','Fondos':'<svg viewBox="0 0 90 72" width="100%"><rect x="5" y="24" width="8" height="38" rx="3" fill="#888" opacity=".5"/><rect x="77" y="24" width="8" height="38" rx="3" fill="#888" opacity=".5"/><rect x="5" y="22" width="80" height="6" rx="3" fill="#333"/><line x1="30" y1="56" x2="30" y2="28" stroke="#1D9E75" stroke-width="4" stroke-linecap="round"/><line x1="60" y1="56" x2="60" y2="28" stroke="#1D9E75" stroke-width="4" stroke-linecap="round"/><ellipse cx="45" cy="48" rx="14" ry="6" fill="#1D9E75" opacity=".7"/><circle cx="45" cy="38" r="7" fill="#F5C4B3"/><path d="M45 28 L45 22" stroke="#EF9F27" stroke-width="1.5" stroke-linecap="round" marker-end="url(#d)"/><defs><marker id="d" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M2 1L8 5L2 9" fill="none" stroke="#EF9F27" stroke-width="1.5"/></marker></defs></svg>','Jalón con cuerda':'<svg viewBox="0 0 90 72" width="100%"><rect x="20" y="5" width="50" height="5" rx="2" fill="#333"/><rect x="42" y="10" width="6" height="12" rx="2" fill="#888"/><rect x="20" y="22" width="50" height="4" rx="2" fill="#333"/><rect x="33" y="33" width="24" height="22" rx="5" fill="#1D9E75" opacity=".7"/><circle cx="45" cy="26" r="7" fill="#F5C4B3"/><line x1="33" y1="42" x2="22" y2="26" stroke="#1D9E75" stroke-width="3" stroke-linecap="round"/><line x1="57" y1="42" x2="68" y2="26" stroke="#1D9E75" stroke-width="3" stroke-linecap="round"/></svg>','Press agarre cerrado':'<svg viewBox="0 0 90 72" width="100%"><rect x="30" y="27" width="30" height="4" rx="2" fill="#333"/><circle cx="30" cy="29" r="5" fill="#222"/><circle cx="60" cy="29" r="5" fill="#222"/><ellipse cx="45" cy="45" rx="13" ry="5" fill="#1D9E75" opacity=".7"/><circle cx="45" cy="37" r="7" fill="#F5C4B3"/><line x1="38" y1="41" x2="33" y2="31" stroke="#1D9E75" stroke-width="3" stroke-linecap="round"/><line x1="52" y1="41" x2="57" y2="31" stroke="#1D9E75" stroke-width="3" stroke-linecap="round"/></svg>','Jalón al pecho':'<svg viewBox="0 0 90 72" width="100%"><rect x="20" y="5" width="50" height="5" rx="2" fill="#333"/><rect x="42" y="10" width="6" height="12" rx="2" fill="#888"/><rect x="18" y="22" width="54" height="4" rx="2" fill="#333"/><rect x="34" y="40" width="22" height="20" rx="5" fill="#1D9E75" opacity=".7"/><circle cx="45" cy="34" r="7" fill="#F5C4B3"/><line x1="34" y1="44" x2="22" y2="26" stroke="#1D9E75" stroke-width="3" stroke-linecap="round"/><line x1="56" y1="44" x2="68" y2="26" stroke="#1D9E75" stroke-width="3" stroke-linecap="round"/></svg>','Remo':'<svg viewBox="0 0 90 72" width="100%"><rect x="5" y="33" width="40" height="8" rx="3" fill="#5DCAA5" opacity=".3"/><rect x="28" y="36" width="24" height="20" rx="5" fill="#1D9E75" opacity=".7" transform="rotate(-15,40,46)"/><circle cx="36" cy="28" r="7" fill="#F5C4B3"/><line x1="28" y1="40" x2="15" y2="36" stroke="#1D9E75" stroke-width="3" stroke-linecap="round"/><line x1="52" y1="46" x2="70" y2="36" stroke="#1D9E75" stroke-width="3" stroke-linecap="round"/><rect x="66" y="32" width="18" height="4" rx="2" fill="#333"/><circle cx="82" cy="34" r="5" fill="#222"/></svg>','Pull over':'<svg viewBox="0 0 90 72" width="100%"><rect x="10" y="50" width="70" height="5" rx="2" fill="#5DCAA5" opacity=".4"/><ellipse cx="45" cy="46" rx="13" ry="5" fill="#1D9E75" opacity=".7"/><circle cx="45" cy="38" r="7" fill="#F5C4B3"/><line x1="32" y1="43" x2="20" y2="27" stroke="#1D9E75" stroke-width="3" stroke-linecap="round"/><line x1="58" y1="43" x2="70" y2="27" stroke="#1D9E75" stroke-width="3" stroke-linecap="round"/><rect x="18" y="23" width="54" height="4" rx="2" fill="#333"/><circle cx="18" cy="25" r="5" fill="#222"/><circle cx="72" cy="25" r="5" fill="#222"/></svg>','Curl barra Z':'<svg viewBox="0 0 90 72" width="100%"><rect x="28" y="32" width="24" height="22" rx="5" fill="#1D9E75" opacity=".7"/><circle cx="45" cy="25" r="7" fill="#F5C4B3"/><line x1="28" y1="40" x2="16" y2="46" stroke="#1D9E75" stroke-width="3.5" stroke-linecap="round"/><line x1="16" y1="46" x2="18" y2="58" stroke="#1D9E75" stroke-width="3.5" stroke-linecap="round"/><path d="M18 58 Q30 54 45 56 Q60 58 72 58" stroke="#333" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="15" cy="58" r="4" fill="#444"/><circle cx="75" cy="58" r="4" fill="#444"/></svg>','Curl martillo':'<svg viewBox="0 0 90 72" width="100%"><rect x="28" y="32" width="24" height="22" rx="5" fill="#1D9E75" opacity=".7"/><circle cx="45" cy="25" r="7" fill="#F5C4B3"/><line x1="28" y1="40" x2="16" y2="46" stroke="#1D9E75" stroke-width="3.5" stroke-linecap="round"/><line x1="16" y1="46" x2="18" y2="58" stroke="#1D9E75" stroke-width="3.5" stroke-linecap="round"/><rect x="14" y="56" width="10" height="3" rx="1" fill="#333"/><circle cx="14" cy="57" r="4" fill="#444"/><circle cx="24" cy="57" r="4" fill="#444"/></svg>','Curl concentrado':'<svg viewBox="0 0 90 72" width="100%"><rect x="20" y="43" width="50" height="10" rx="4" fill="#5DCAA5" opacity=".3"/><rect x="32" y="22" width="26" height="22" rx="5" fill="#1D9E75" opacity=".7" transform="rotate(-10,45,33)"/><circle cx="43" cy="16" r="7" fill="#F5C4B3"/><line x1="32" y1="30" x2="22" y2="24" stroke="#1D9E75" stroke-width="3.5" stroke-linecap="round"/><line x1="22" y1="24" x2="24" y2="38" stroke="#1D9E75" stroke-width="3.5" stroke-linecap="round"/></svg>','Extensión cuádriceps':'<svg viewBox="0 0 90 72" width="100%"><rect x="20" y="20" width="50" height="28" rx="6" fill="#5DCAA5" opacity=".3"/><rect x="28" y="18" width="34" height="18" rx="5" fill="#1D9E75" opacity=".7"/><circle cx="45" cy="12" r="7" fill="#F5C4B3"/><line x1="32" y1="34" x2="20" y2="53" stroke="#1D9E75" stroke-width="4" stroke-linecap="round"/><line x1="58" y1="34" x2="70" y2="53" stroke="#1D9E75" stroke-width="4" stroke-linecap="round"/></svg>','Flexión isquiotibiales':'<svg viewBox="0 0 90 72" width="100%"><rect x="20" y="20" width="50" height="28" rx="6" fill="#5DCAA5" opacity=".3"/><rect x="28" y="18" width="34" height="18" rx="5" fill="#1D9E75" opacity=".7"/><circle cx="45" cy="12" r="7" fill="#F5C4B3"/><line x1="32" y1="34" x2="28" y2="48" stroke="#1D9E75" stroke-width="4" stroke-linecap="round"/><line x1="58" y1="34" x2="62" y2="48" stroke="#1D9E75" stroke-width="4" stroke-linecap="round"/><line x1="28" y1="48" x2="22" y2="63" stroke="#1D9E75" stroke-width="4" stroke-linecap="round"/><line x1="62" y1="48" x2="68" y2="63" stroke="#1D9E75" stroke-width="4" stroke-linecap="round"/></svg>','Prensa de piernas':'<svg viewBox="0 0 90 72" width="100%"><rect x="5" y="36" width="38" height="26" rx="5" fill="#5DCAA5" opacity=".3"/><rect x="55" y="12" width="28" height="5" rx="2" fill="#444"/><ellipse cx="28" cy="46" rx="14" ry="6" fill="#1D9E75" opacity=".7"/><circle cx="17" cy="33" r="7" fill="#F5C4B3"/><line x1="36" y1="42" x2="55" y2="24" stroke="#1D9E75" stroke-width="4" stroke-linecap="round"/><line x1="36" y1="49" x2="55" y2="31" stroke="#1D9E75" stroke-width="4" stroke-linecap="round"/></svg>','Press militar':'<svg viewBox="0 0 90 72" width="100%"><rect x="28" y="32" width="24" height="22" rx="5" fill="#1D9E75" opacity=".7"/><circle cx="45" cy="25" r="7" fill="#F5C4B3"/><line x1="28" y1="38" x2="16" y2="20" stroke="#1D9E75" stroke-width="3" stroke-linecap="round"/><line x1="62" y1="38" x2="74" y2="20" stroke="#1D9E75" stroke-width="3" stroke-linecap="round"/><rect x="14" y="16" width="62" height="5" rx="2" fill="#333"/><circle cx="14" cy="18" r="5" fill="#444"/><circle cx="76" cy="18" r="5" fill="#444"/></svg>','Elevación lateral':'<svg viewBox="0 0 90 72" width="100%"><rect x="28" y="32" width="24" height="22" rx="5" fill="#1D9E75" opacity=".7"/><circle cx="45" cy="25" r="7" fill="#F5C4B3"/><line x1="28" y1="40" x2="8" y2="32" stroke="#1D9E75" stroke-width="3" stroke-linecap="round"/><line x1="62" y1="40" x2="82" y2="32" stroke="#1D9E75" stroke-width="3" stroke-linecap="round"/><circle cx="8" cy="32" r="5" fill="#333"/><circle cx="82" cy="32" r="5" fill="#333"/></svg>','Elevación frontal':'<svg viewBox="0 0 90 72" width="100%"><rect x="28" y="32" width="24" height="22" rx="5" fill="#1D9E75" opacity=".7"/><circle cx="45" cy="25" r="7" fill="#F5C4B3"/><line x1="28" y1="40" x2="14" y2="26" stroke="#1D9E75" stroke-width="3" stroke-linecap="round"/><circle cx="10" cy="22" r="5" fill="#333"/></svg>','Remo máquina/mancuerna':'<svg viewBox="0 0 90 72" width="100%"><rect x="5" y="33" width="40" height="8" rx="3" fill="#5DCAA5" opacity=".3"/><rect x="28" y="36" width="24" height="20" rx="5" fill="#1D9E75" opacity=".7" transform="rotate(-15,40,46)"/><circle cx="36" cy="28" r="7" fill="#F5C4B3"/><line x1="28" y1="40" x2="15" y2="36" stroke="#1D9E75" stroke-width="3" stroke-linecap="round"/><line x1="52" y1="46" x2="70" y2="36" stroke="#1D9E75" stroke-width="3" stroke-linecap="round"/><rect x="66" y="32" width="18" height="4" rx="2" fill="#333"/><circle cx="82" cy="34" r="5" fill="#222"/></svg>','Hip thrust':'<svg viewBox="0 0 90 72" width="100%"><rect x="5" y="46" width="28" height="20" rx="5" fill="#5DCAA5" opacity=".3"/><rect x="20" y="34" width="52" height="10" rx="5" fill="#1D9E75" opacity=".7"/><circle cx="24" cy="40" r="7" fill="#F5C4B3"/><line x1="55" y1="42" x2="60" y2="56" stroke="#1D9E75" stroke-width="4" stroke-linecap="round"/><line x1="67" y1="42" x2="72" y2="56" stroke="#1D9E75" stroke-width="4" stroke-linecap="round"/></svg>','Patada trasera polea':'<svg viewBox="0 0 90 72" width="100%"><rect x="5" y="18" width="8" height="48" rx="3" fill="#888" opacity=".5"/><rect x="24" y="32" width="22" height="22" rx="5" fill="#1D9E75" opacity=".7" transform="rotate(10,35,43)"/><circle cx="36" cy="24" r="7" fill="#F5C4B3"/><line x1="46" y1="44" x2="62" y2="36" stroke="#1D9E75" stroke-width="4" stroke-linecap="round"/><rect x="60" y="32" width="14" height="5" rx="2" fill="#333"/></svg>','Peso muerto rumano':'<svg viewBox="0 0 90 72" width="100%"><rect x="28" y="18" width="34" height="22" rx="5" fill="#1D9E75" opacity=".7" transform="rotate(15,45,29)"/><circle cx="50" cy="10" r="7" fill="#F5C4B3"/><line x1="28" y1="26" x2="15" y2="40" stroke="#1D9E75" stroke-width="3" stroke-linecap="round"/><rect x="14" y="36" width="30" height="4" rx="2" fill="#333"/><circle cx="14" cy="38" r="4" fill="#444"/><circle cx="44" cy="38" r="4" fill="#444"/><line x1="35" y1="38" x2="28" y2="65" stroke="#1D9E75" stroke-width="4" stroke-linecap="round"/><line x1="55" y1="38" x2="62" y2="65" stroke="#1D9E75" stroke-width="4" stroke-linecap="round"/></svg>','Sentadilla sumo':'<svg viewBox="0 0 90 72" width="100%"><rect x="30" y="22" width="30" height="20" rx="6" fill="#1D9E75" opacity=".7"/><circle cx="45" cy="15" r="7" fill="#F5C4B3"/><line x1="35" y1="40" x2="20" y2="58" stroke="#1D9E75" stroke-width="4" stroke-linecap="round"/><line x1="55" y1="40" x2="70" y2="58" stroke="#1D9E75" stroke-width="4" stroke-linecap="round"/><rect x="36" y="36" width="18" height="4" rx="2" fill="#333"/><circle cx="36" cy="38" r="4" fill="#444"/><circle cx="54" cy="38" r="4" fill="#444"/></svg>'};
+
+// ========== RUTINAS ==========
+function ejRow(s,n,r,tipo,sep){return {serie:s,nombre:n,reps:r,tipo:tipo,sep:sep||false};}
+function tablaEj(ejs){
+  var nombres=[];for(var i=0;i<ejs.length;i++)if(nombres.indexOf(ejs[i].nombre)===-1)nombres.push(ejs[i].nombre);
+  var html='';
+  var svgs=nombres.filter(function(n){return ESVG[n];});
+  if(svgs.length>0){html+='<div class="ej-grid">';for(var i=0;i<svgs.length;i++)html+='<div class="ej-card">'+ESVG[svgs[i]]+'<div class="ej-name">'+tx(svgs[i])+'</div></div>';html+='</div>';}
+  html+='<table class="stable"><tr><th>'+tx('Serie')+'</th><th>'+tx('Ejercicio')+'</th><th>Reps</th><th>'+tx('Tipo')+'</th></tr>';
+  for(var i=0;i<ejs.length;i++){var e=ejs[i];var cls=e.tipo==='warm'?'s-warm':e.tipo==='aprox'?'s-aprox':e.tipo==='max'?'s-max':'';var badge=e.tipo==='warm'?'<span class="bwarm">'+tx('Cal.')+'</span>':e.tipo==='aprox'?'<span class="baprox">'+tx('Aprox.')+'</span>':e.tipo==='max'?'<span class="bmax">'+tx('Al fallo')+'</span>':'<span class="bwork">'+tx('Trabajo')+'</span>';html+='<tr class="'+cls+'"><td>'+e.serie+'</td><td>'+tx(e.nombre)+'</td><td>'+e.reps+'</td><td>'+badge+'</td></tr>';if(e.sep)html+='<tr><td colspan="4" style="padding:2px 0;font-size:10px;color:#ddd">—</td></tr>';}
+  return html+'</table>';
+}
+function dayCard(id,tit,sub,body,tip){tit=tx(tit);sub=tx(sub);return '<div class="day-card"><div class="day-hdr" onclick="toggleDay(\''+id+'\')"><div><div class="day-tit">'+tit+'</div><div class="day-sub">'+sub+'</div></div><span class="day-bdg" id="'+id+'-bdg">Ver ▼</span></div><div class="day-body" id="'+id+'">'+body+(tip?'<div class="tip-box">'+tip+'</div>':'')+'</div></div>';}
+function toggleDay(id){var b=document.getElementById(id);var bdg=document.getElementById(id+'-bdg');var open=b.classList.contains('open');b.classList.toggle('open',!open);if(bdg)bdg.textContent=open?'Ver ▼':'Cerrar ▲';}
+function lockBox(id,tit,desc){return '<div id="lrt-'+id+'" class="lock-box"><div style="font-size:24px;margin-bottom:6px">🔒</div><div class="lock-t">'+tit+'</div><div class="lock-d">'+desc+'</div><a href="https://www.paypal.me/DeybiVillar651/9.99" target="_blank" class="lock-btn">💳 Suscribirme — $9.99/mes</a><div class="lock-row"><input type="password" class="lock-inp" id="crt-'+id+'" placeholder="Código familiar..."><button class="lock-go" onclick="unlockRt(\''+id+'\')">→</button></div><div class="lock-err" id="ert-'+id+'">Código incorrecto.</div></div><div id="brt-'+id+'" style="display:none">';}
+function unlockRt(id){var codeEl=document.getElementById('crt-'+id);var v=codeEl?codeEl.value.trim():FAM;if(v===FAM||isPro){isPro=true;freeQ=999;var lock=document.getElementById('lrt-'+id);var body=document.getElementById('brt-'+id);if(lock)lock.style.display='none';if(body)body.style.display='block';actualizarQ();unlockSec('mujeres');unlockSec('mayor');}else{var err=document.getElementById('ert-'+id);if(err){err.style.display='block';setTimeout(function(){err.style.display='none';},3000);}if(codeEl)codeEl.value='';}}
+
+function mk4(n,r1,r2){var a=[];for(var i=1;i<=4;i++)a.push(ejRow(i,n,i===1?r1:r2,i===1?'warm':'work',false));return a;}
+function mk4sep(n,r1,r2){var a=mk4(n,r1,r2);a[3].sep=true;return a;}
+function mk3(n){return [ejRow(1,n,15,'warm'),ejRow(2,n,10,'aprox'),ejRow(3,n,'Al fallo','max',false)];}
+function mk3sep(n){var a=mk3(n);a[2].sep=true;return a;}
+function mkY(n){return [ejRow('C1',n,15,'warm'),ejRow('C2',n,10,'aprox'),ejRow('💀',n,'Al fallo+neg.','max',false)];}
+function mkYsep(n){var a=mkY(n);a[2].sep=true;return a;}
+
+function construirRutinas(){
+  var pecho=mk4sep('Press declinado',15,10).concat(mk4sep('Press inclinado',15,10)).concat(mk4('Aperturas',15,12));
+  var tri=mk4sep('Fondos',15,10).concat(mk4sep('Jalón con cuerda',15,10)).concat(mk4('Press agarre cerrado',15,8));
+  var esp=mk4sep('Jalón al pecho',15,10).concat(mk4sep('Remo máquina/mancuerna',15,10)).concat(mk4('Pull over',15,12));
+  var bic=mk4sep('Curl barra Z',15,10).concat(mk4sep('Curl martillo',15,10)).concat(mk4('Curl concentrado',15,12));
+  var pier=mk4sep('Extensión cuádriceps',20,15).concat(mk4sep('Flexión isquiotibiales',20,15)).concat(mk4('Prensa de piernas',20,10));
+  var hom=mk4sep('Elevación lateral',15,12).concat(mk4sep('Elevación frontal',15,12)).concat(mk4('Press militar',15,8));
+  var nHTML='<div class="week-note">💡 '+tx('3 días por semana · Descansa 1 día entre sesiones · Calienta 10 min')+'</div>';
+  nHTML+=dayCard('d1','Día 1 — Pecho y Tríceps','Lunes o Martes','<div class="muscle-tit">'+tx('💪 PECHO')+'</div>'+tablaEj(pecho)+'<div class="muscle-tit">'+tx('🦾 TRÍCEPS')+'</div>'+tablaEj(tri),'💡 Descansa 60-90 seg. Sube el peso progresivamente.');
+  nHTML+=dayCard('d2','Día 2 — Espalda y Bíceps','Miércoles o Jueves','<div class="muscle-tit">'+tx('🏋️ ESPALDA')+'</div>'+tablaEj(esp)+'<div class="muscle-tit">'+tx('💪 BÍCEPS')+'</div>'+tablaEj(bic),'💡 En el remo jala con el codo, no con la mano.');
+  nHTML+=dayCard('d3','Día 3 — Piernas y Hombros','Viernes o Sábado','<div class="muscle-tit">'+tx('🦵 PIERNAS')+'</div>'+tablaEj(pier)+'<div class="muscle-tit">'+tx('🏆 HOMBROS')+'</div>'+tablaEj(hom),'💡 En hombros controla bien — son articulaciones delicadas.');
+  document.getElementById('rt-normal').innerHTML=lockBox('normal','Rutinas PRO','Las rutinas completas son exclusivas para miembros PRO. $9.99/mes.')+nHTML+'</div>';
+
+  var mHTML='<div class="mentor-desc">"El crecimiento ocurre en el descanso, no en el gym." — Deybi Castillo, 35+ años de experiencia</div>';
+  mHTML+='<div class="card" style="margin-bottom:10px"><div class="ctit">Principios Heavy Duty</div><div class="trow"><div class="tico">3️⃣</div><div><div class="tt">3 series por ejercicio</div><div class="td">Cal. → Aproximación → Al fallo total con máximo peso.</div></div></div><div class="trow"><div class="tico">😴</div><div><div class="tt">Descanso 5-7 días por músculo</div><div class="td">El músculo crece durante el descanso.</div></div></div></div>';
+  var musM=[['m1','Semana — Pecho','',['Press declinado','Press inclinado','Aperturas'],'💡 Descansa el pecho 5-7 días mínimo.'],['m2','Semana — Espalda','',['Jalón al pecho','Remo máquina/mancuerna','Pull over'],'💡 Descansa la espalda antes de volver.'],['m3','Semana — Piernas','',['Extensión cuádriceps','Flexión isquiotibiales','Prensa de piernas'],'💡 El día más difícil mentalmente.'],['m4','Semana — Bíceps','',['Curl barra Z','Curl martillo','Curl concentrado'],'💡 3 series al fallo es suficiente.'],['m5','Semana — Tríceps','',['Fondos','Jalón con cuerda','Press agarre cerrado'],'💡 El tríceps trabaja en el día de pecho.'],['m6','Semana — Hombros','',['Elevación lateral','Elevación frontal','Press militar'],'💡 Técnica perfecta aunque sea al fallo.']];
+  for(var i=0;i<musM.length;i++){var m=musM[i];var rows=[];for(var j=0;j<m[3].length;j++){var ej=m[3][j];if(j<m[3].length-1)rows=rows.concat([ejRow(1,ej,15,'warm'),ejRow(2,ej,10,'aprox'),ejRow(3,ej,'Al fallo','max',true)]);else rows=rows.concat([ejRow(1,ej,15,'warm'),ejRow(2,ej,10,'aprox'),ejRow(3,ej,'Al fallo','max',false)]);}mHTML+=dayCard(m[0],m[1],m[2],tablaEj(rows),m[4]);}
+  document.getElementById('rt-mentzer').innerHTML=lockBox('mentzer','PRO — Mike Mentzer Heavy Duty','Rutina Heavy Duty exclusiva para miembros PRO.')+mHTML+'</div>';
+
+  var yHTML='<div class="mentor-desc">"Una sola serie con máxima intensidad." Dorian Yates — 6x Mr. Olympia.</div>';
+  yHTML+='<div class="card" style="margin-bottom:10px"><div class="ctit">Principios Blood & Guts</div><div class="trow"><div class="tico">1️⃣</div><div><div class="tt">Una sola serie de trabajo</div><div class="td">2 calentamientos + 1 serie al fallo absoluto con negativas.</div></div></div><div class="trow"><div class="tico">⚠️</div><div><div class="tt">Solo para avanzados</div><div class="td">Muy intenso. No para principiantes ni lesiones activas.</div></div></div></div>';
+  var ydays=[['y1','Lunes — Espalda','',['Jalón al pecho','Remo máquina/mancuerna','Pull over'],'💡 Las negativas necesitan un compañero.'],['y2','Martes — Pecho y Bíceps','',['Press declinado','Press inclinado','Curl barra Z'],'💡 Descansa bien el día siguiente.'],['y3','Jueves — Piernas','',['Extensión cuádriceps','Flexión isquiotibiales','Prensa de piernas'],'💡 El día más brutal de la semana.'],['y4','Viernes — Hombros y Tríceps','',['Elevación lateral','Elevación frontal','Press militar','Fondos','Jalón con cuerda','Press agarre cerrado'],'💡 Último día. Deja todo en el gym.']];
+  for(var i=0;i<ydays.length;i++){var yd=ydays[i];var rows=[];for(var j=0;j<yd[3].length;j++){var ej=yd[3][j];if(j<yd[3].length-1)rows=rows.concat([ejRow('C1',ej,15,'warm'),ejRow('C2',ej,10,'aprox'),ejRow('💀',ej,'Al fallo+neg.','max',true)]);else rows=rows.concat([ejRow('C1',ej,15,'warm'),ejRow('C2',ej,10,'aprox'),ejRow('💀',ej,'Al fallo+neg.','max',false)]);}yHTML+=dayCard(yd[0],yd[1],yd[2],tablaEj(rows),yd[4]);}
+  document.getElementById('rt-yates').innerHTML=lockBox('yates','PRO — Dorian Yates Blood & Guts','Rutina Blood & Guts exclusiva para miembros PRO.')+yHTML+'</div>';
+
+  var cHTML=lockBox('cambio','PRO — Cambio de Rutina','El ciclo de cambio cada 3 meses es exclusivo para miembros PRO.');
+  cHTML+='<div class="card"><div class="ctit">🔄 Ciclo de 12 meses — Deybi Castillo</div><div style="display:flex;flex-direction:column;gap:8px;margin-top:4px"><div style="background:#E1F5EE;border-radius:8px;padding:10px 12px"><div style="font-size:12px;font-weight:700;color:#085041">Meses 1-3 · Rutina Normal</div><div style="font-size:11px;color:#0F6E56;margin-top:2px">Base de fuerza. 4 series por ejercicio.</div></div><div style="background:#EEEDFE;border-radius:8px;padding:10px 12px"><div style="font-size:12px;font-weight:700;color:#3C3489">Meses 4-6 · Mike Mentzer</div><div style="font-size:11px;color:#534AB7;margin-top:2px">Heavy Duty. 3 series al fallo por músculo.</div></div><div style="background:#FCEBEB;border-radius:8px;padding:10px 12px"><div style="font-size:12px;font-weight:700;color:#A32D2D">Meses 7-9 · Dorian Yates</div><div style="font-size:11px;color:#993C1D;margin-top:2px">Blood & Guts. Una serie devastadora.</div></div><div style="background:#E1F5EE;border-radius:8px;padding:10px 12px"><div style="font-size:12px;font-weight:700;color:#085041">Meses 10-12 · Vuelta a Normal</div><div style="font-size:11px;color:#0F6E56;margin-top:2px">Descansa la intensidad y consolida ganancias.</div></div></div></div></div>';
+  document.getElementById('rt-cambio').innerHTML=cHTML;
+}
+function showRtab(tab,btn){document.querySelectorAll('.rsec').forEach(function(x){x.classList.remove('act');});document.getElementById('rt-'+tab).classList.add('act');document.querySelectorAll('.rtab').forEach(function(x){x.classList.remove('act');});btn.classList.add('act');}
+
+// ========== MUJERES ==========
+function construirMujeres(){renderMujerObj();renderGluteo();}
+function setObjMujer(o,el){mujerObj=o;document.getElementById('obj-muscle').className='obj-btn'+(o==='muscle'?' act-m':'');document.getElementById('obj-def').className='obj-btn'+(o==='def'?' act-d':'');renderMujerObj();}
+function renderMujerObj(){
+  var html='';
+  var r=mujerObj==='muscle'?[12,10,8,8]:[15,13,12,12];
+  if(mujerObj==='muscle'){
+    html='<div class="trow"><div class="tico">💪</div><div><div class="tt">8-10 repeticiones</div><div class="td">Peso más alto. Estimula el crecimiento muscular.</div></div></div><div class="trow"><div class="tico">🥩</div><div><div class="tt">Proteína: 1.8-2g/kg</div><div class="td">Las mujeres también necesitan proteína alta para ganar músculo.</div></div></div>';
+  } else {
+    html='<div class="trow"><div class="tico">✨</div><div><div class="tt">12-15 repeticiones</div><div class="td">Menos peso, más repeticiones. Mayor quema calórica.</div></div></div><div class="trow"><div class="tico">🏃</div><div><div class="tt">Cardio mínimo 30 min diarios</div><div class="td">Obligatorio para definición. Caminata, bicicleta, HIIT.</div></div></div><div class="trow"><div class="tico">🥗</div><div><div class="tt">Déficit calórico moderado</div><div class="td">300-400 calorías menos. No más — perderías músculo.</div></div></div>';
+  }
+  var ejsL=['Press agarre cerrado','Remo','Curl martillo'];
+  var rowsL=[];
+  for(var i=0;i<ejsL.length;i++){var sep=i<ejsL.length-1;rowsL=rowsL.concat([ejRow(1,ejsL[i],r[0],'warm'),ejRow(2,ejsL[i],r[1],'work'),ejRow(3,ejsL[i],r[2],'work'),ejRow(4,ejsL[i],r[3],'work',sep)]);}
+  var ejsP=['Prensa de piernas','Extensión cuádriceps','Flexión isquiotibiales'];
+  var rowsP=[];
+  for(var i=0;i<ejsP.length;i++){var sep=i<ejsP.length-1;rowsP=rowsP.concat([ejRow(1,ejsP[i],r[0]+3,'warm'),ejRow(2,ejsP[i],r[1]+2,'work'),ejRow(3,ejsP[i],r[2],'work'),ejRow(4,ejsP[i],r[3],'work',sep)]);}
+  var cardioNote=mujerObj==='def'?'<div class="tip-box">🏃 Después de las piernas: 30 min cardio — caminata rápida, bicicleta o elíptica.</div>':'';
+  html+='<div style="margin-top:12px">'+
+    dayCard('muj1','Lunes — Tren superior','Pecho, espalda y brazos',tablaEj(rowsL),'💡 Pesos que te desafíen en las últimas 2-3 reps.')+
+    dayCard('muj3','Jueves — Piernas completo','Cuádriceps, isquiotibiales',tablaEj(rowsP)+cardioNote,'💡 Las piernas responden bien con más volumen.')+
+  '</div>';
+  document.getElementById('mujer-contenido').innerHTML=html;
+}
+function setSemana(s,btn){glutSem=s;document.getElementById('sem-a').className='sem-btn'+(s==='A'?' act':'');document.getElementById('sem-b').className='sem-btn'+(s==='B'?' act':'');renderGluteo();}
+function renderGluteo(){
+  var html='';
+  if(glutSem==='A'){
+    var hip=[ejRow(1,'Hip thrust',15,'warm'),ejRow(2,'Hip thrust',12,'work'),ejRow(3,'Hip thrust',10,'work'),ejRow(4,'Hip thrust',10,'work')];
+    var pat=[ejRow(1,'Patada trasera polea',15,'warm'),ejRow(2,'Patada trasera polea',12,'work'),ejRow(3,'Patada trasera polea',12,'work'),ejRow(4,'Patada trasera polea',12,'work')];
+    html=dayCard('gA1','Hip thrust','Glúteo mayor — el más efectivo',tablaEj(hip),'💡 Apoya la espalda alta en banca. Empuja con los talones.')+dayCard('gA2','Patada trasera en polea','Glúteo mayor — aislamiento',tablaEj(pat),'💡 Mantén la cadera estable. Solo mueve la pierna.');
+  } else {
+    var rum=[ejRow(1,'Peso muerto rumano',15,'warm'),ejRow(2,'Peso muerto rumano',12,'work'),ejRow(3,'Peso muerto rumano',10,'work'),ejRow(4,'Peso muerto rumano',10,'work')];
+    var sum=[ejRow(1,'Sentadilla sumo',15,'warm'),ejRow(2,'Sentadilla sumo',12,'work'),ejRow(3,'Sentadilla sumo',12,'work'),ejRow(4,'Sentadilla sumo',10,'work')];
+    html=dayCard('gB1','Peso muerto rumano','Glúteo + isquiotibiales',tablaEj(rum),'💡 Baja con control sintiendo el estiramiento.')+dayCard('gB2','Sentadilla sumo','Glúteo medio y aductores',tablaEj(sum),'💡 Pies más anchos que hombros, puntas hacia afuera.');
+  }
+  document.getElementById('gluteo-contenido').innerHTML=html;
+}
+
+// ========== FARMACOLOGIA ==========
+var PHARMA=[{n:'AINEs (antiinflamatorios)',b:'bb',r:[['Ejemplos','Ibuprofeno, naproxeno, diclofenaco'],['Para qué','Dolor muscular, inflamación articular'],['Pros','Efectivos, acción rápida'],['Contras','Irritan el estómago. Máximo 5-7 días']],d:'Consulta a tu médico para la dosis correcta.'},{n:'Analgésicos',b:'bg',r:[['Ejemplos','Paracetamol, tramadol (receta)'],['Para qué','Dolor post-entreno, cefaleas'],['Pros','Suave con el estómago'],['Contras','Sin efecto antiinflamatorio']],d:'Nunca combines paracetamol con alcohol.'},{n:'Relajantes musculares',b:'ba',r:[['Ejemplos','Ciclobenzaprina, metocarbamol'],['Para qué','Contracturas, espasmos, lumbar agudo'],['Pros','Muy efectivos'],['Contras','Somnolencia. Máximo 2-3 semanas']],d:'Requieren prescripción médica.'},{n:'Tópicos (geles y cremas)',b:'bg',r:[['Ejemplos','Voltaren gel, Deep Heat, árnica'],['Para qué','Dolores localizados, tendinitis'],['Pros','Acción local. No irritan el estómago'],['Contras','No llegan a lesiones profundas']],d:'Seguros para uso regular.'},{n:'Suplementos articulares',b:'bg',r:[['Ejemplos','Colágeno, glucosamina, condroitina'],['Para qué','Salud de cartílagos y tendones'],['Pros','Muy seguros. Evidencia científica sólida'],['Contras','Efecto lento — mínimo 8-12 semanas']],d:'Toma colágeno con vitamina C.'}];
+function construirFarma(){document.getElementById('pharmalist').innerHTML=PHARMA.map(function(p,i){return '<div class="fc" onclick="togFarma('+i+')"><div class="fh"><span class="fn">'+p.n+'</span><span class="badge '+p.b+'" style="margin:0">▼</span></div><div class="fb" id="fb'+i+'">'+p.r.map(function(r){return '<div class="fr"><div class="fl">'+r[0]+'</div><div class="fv">'+r[1]+'</div></div>';}).join('')+'<div class="fdis">⚠️ '+p.d+'</div></div></div>';}).join('');}
+function togFarma(i){var b=document.getElementById('fb'+i);var open=b.classList.contains('vis');document.querySelectorAll('.fb').forEach(function(x){x.classList.remove('vis');});if(!open)b.classList.add('vis');}
+
+// ========== USUARIO ==========
+var GYM_EJ=['Press declinado','Press inclinado','Aperturas','Fondos','Jalón con cuerda','Press agarre cerrado','Jalón al pecho','Remo','Pull over','Curl barra Z','Curl martillo','Curl concentrado','Extensión cuádriceps','Flexión isquiotibiales','Prensa de piernas','Press militar','Elevación lateral','Elevación frontal'];
+var GYM_IDS=['gy0','gy1','gy2','gy3','gy4','gy5','gy6','gy7','gy8','gy9','gy10','gy11','gy12','gy13','gy14','gy15','gy16','gy17'];
+function construirGymInputs(){var html='<div style="font-size:12px;color:#666;margin-bottom:10px">Ingresa el peso máximo por ejercicio (kg):</div>';for(var i=0;i<GYM_EJ.length;i++){if(i%2===0)html+='<div class="frow2">';html+='<div><label class="flbl">'+GYM_EJ[i]+'</label><input type="number" class="finput" id="'+GYM_IDS[i]+'" placeholder="0"></div>';if(i%2===1||i===GYM_EJ.length-1)html+='</div>';}document.getElementById('gym-inputs').innerHTML=html;}
+function crearPerfil(){var n=document.getElementById('reg-nombre').value.trim();var e=document.getElementById('reg-edad').value;var p=document.getElementById('reg-peso').value;var a=document.getElementById('reg-altura').value;var o=document.getElementById('reg-obj').value;if(!n||!e||!p||!a){alert('Por favor completa todos los campos');return;}perfil={nombre:n,edad:parseInt(e),pesoInicial:parseFloat(p),altura:parseInt(a),objetivo:o,fechaInicio:new Date().toISOString().split('T')[0],pesos:[{fecha:new Date().toISOString().split('T')[0],valor:parseFloat(p)}],medidas:[],gym:{},rutina:'Normal'};localStorage.setItem('fit35_perfil',JSON.stringify(perfil));mostrarPerfil();}
+function cargarPerfil(){var data=localStorage.getItem('fit35_perfil');if(!data){alert('No hay perfil guardado. Por favor crea uno nuevo.');return;}perfil=JSON.parse(data);mostrarPerfil();}
+function cerrarSesion(){if(confirm('¿Cerrar sesión?')){perfil=null;document.getElementById('perfil-box').style.display='none';document.getElementById('login-box').style.display='block';}}
+function mostrarPerfil(){document.getElementById('login-box').style.display='none';document.getElementById('perfil-box').style.display='block';var ini=perfil.nombre.split(' ').map(function(n){return n[0];}).join('').toUpperCase().slice(0,2);document.getElementById('prof-av').textContent=ini;document.getElementById('prof-nombre').textContent=perfil.nombre;var objs={muscle:'Ganar músculo',fat:'Perder grasa',gain:'Subir de peso',health:'Salud general'};document.getElementById('prof-obj').textContent='Objetivo: '+(objs[perfil.objetivo]||perfil.objetivo);var dias=Math.floor((new Date()-new Date(perfil.fechaInicio))/(1000*60*60*24))+1;document.getElementById('prof-dias').textContent='Día '+dias+' · Rutina: '+perfil.rutina;renderResumen();renderMedidasU();renderGymRec();renderHist();if(perfil.gym)GYM_IDS.forEach(function(id,i){var el=document.getElementById(id);if(el&&perfil.gym[id])el.value=perfil.gym[id];});}
+function renderResumen(){var pesos=perfil.pesos||[];var pa=pesos.length>0?pesos[pesos.length-1].valor:perfil.pesoInicial;var diff=(pa-perfil.pesoInicial).toFixed(1);var imc=(pa/((perfil.altura/100)*(perfil.altura/100))).toFixed(1);var dias=Math.floor((new Date()-new Date(perfil.fechaInicio))/(1000*60*60*24))+1;document.getElementById('res-stats').innerHTML='<div class="stat"><div class="sv">'+pa+'<span style="font-size:12px">kg</span></div><div class="sl">Peso actual</div><div style="font-size:11px;font-weight:600;margin-top:3px;color:'+(parseFloat(diff)<0?'#1D9E75':parseFloat(diff)>0?'#A32D2D':'#999')+'">'+(parseFloat(diff)>0?'+':'')+diff+'kg</div></div><div class="stat"><div class="sv">'+imc+'</div><div class="sl">IMC</div></div><div class="stat"><div class="sv">'+dias+'</div><div class="sl">Días activo</div></div>';var list=document.getElementById('peso-list');if(pesos.length===0){list.innerHTML='<div style="font-size:12px;color:#999;text-align:center;padding:10px">Sin registros aún</div>';return;}list.innerHTML=pesos.slice(-5).reverse().map(function(p,i,arr){var prev=arr[i+1];var d=prev?(p.valor-prev.valor).toFixed(1):null;return '<div class="prog-item"><div style="font-size:12px">'+p.fecha+'</div><div style="text-align:right"><div style="font-size:13px;font-weight:600;color:#1D9E75">'+p.valor+' kg</div>'+(d&&d!=='0.0'?'<div style="font-size:10px;color:'+(parseFloat(d)<0?'#1D9E75':'#A32D2D')+'">'+(parseFloat(d)>0?'+':'')+d+'kg</div>':'')+'</div></div>';}).join('');var rc={Normal:'#E1F5EE',Mentzer:'#EEEDFE',Yates:'#FCEBEB'};var rt={Normal:'4 series · Pecho/Tríceps, Espalda/Bíceps, Piernas/Hombros',Mentzer:'Heavy Duty · 3 series al fallo por músculo',Yates:'Blood & Guts · 1 serie devastadora'};document.getElementById('rutina-activa').innerHTML='<div style="background:'+(rc[perfil.rutina]||'#E1F5EE')+';border-radius:10px;padding:12px"><div style="font-size:13px;font-weight:700;margin-bottom:4px">'+perfil.rutina+'</div><div style="font-size:12px;color:#666;line-height:1.5;margin-bottom:8px">'+(rt[perfil.rutina]||'')+'</div><div style="display:flex;gap:6px;flex-wrap:wrap">'+['Normal','Mentzer','Yates'].map(function(r){return '<button onclick="cambiarRutina(\''+r+'\')" style="font-size:11px;padding:5px 10px;border:1px solid #ddd;border-radius:20px;background:#fff;cursor:pointer;font-family:inherit'+(perfil.rutina===r?';border-color:#1D9E75;color:#1D9E75':'')+' ">'+r+'</button>';}).join('')+'</div></div>';}
+function cambiarRutina(r){perfil.rutina=r;localStorage.setItem('fit35_perfil',JSON.stringify(perfil));mostrarPerfil();}
+function guardarPeso(){var val=parseFloat(document.getElementById('nuevo-peso').value);var fecha=document.getElementById('nuevo-fecha').value;if(!val||!fecha){alert('Ingresa el peso y la fecha');return;}if(!perfil.pesos)perfil.pesos=[];perfil.pesos.push({fecha:fecha,valor:val});perfil.pesos.sort(function(a,b){return a.fecha.localeCompare(b.fecha);});localStorage.setItem('fit35_perfil',JSON.stringify(perfil));var ok=document.getElementById('peso-ok');ok.classList.add('show');document.getElementById('nuevo-peso').value='';setTimeout(function(){ok.classList.remove('show');document.getElementById('peso-form').style.display='none';renderResumen();renderHist();},1500);}
+function renderMedidasU(){var medidas=perfil.medidas||[];var actual=medidas.length>0?medidas[medidas.length-1]:null;var campos=['pecho','cintura','cadera','brazo','muslo'];var labels=['Pecho','Cintura','Cadera','Brazo','Muslo'];if(!actual){document.getElementById('medidas-actual').innerHTML='<div style="font-size:12px;color:#999;text-align:center;padding:10px">Sin medidas aún.</div>';return;}document.getElementById('medidas-actual').innerHTML='<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'+campos.map(function(c,i){var curr=actual[c];return '<div class="stat"><div class="sv">'+(curr||'—')+'<span style="font-size:11px">cm</span></div><div class="sl">'+labels[i]+'</div></div>';}).join('')+'</div><div style="font-size:11px;color:#999;margin-top:6px;text-align:right">'+actual.fecha+'</div>';}
+function guardarMedidas(){var fecha=document.getElementById('m-fecha').value;if(!fecha){alert('Ingresa la fecha');return;}var m={fecha:fecha,pecho:parseFloat(document.getElementById('m-pecho').value)||null,cintura:parseFloat(document.getElementById('m-cintura').value)||null,cadera:parseFloat(document.getElementById('m-cadera').value)||null,brazo:parseFloat(document.getElementById('m-brazo').value)||null,muslo:parseFloat(document.getElementById('m-muslo').value)||null};if(!perfil.medidas)perfil.medidas=[];perfil.medidas.push(m);perfil.medidas.sort(function(a,b){return a.fecha.localeCompare(b.fecha);});localStorage.setItem('fit35_perfil',JSON.stringify(perfil));var ok=document.getElementById('med-ok');ok.classList.add('show');setTimeout(function(){ok.classList.remove('show');document.getElementById('med-form').style.display='none';renderMedidasU();},1500);}
+function renderGymRec(){var gym=perfil.gym||{};var maxP=0;GYM_IDS.forEach(function(id){if(gym[id]&&gym[id]>maxP)maxP=gym[id];});if(maxP===0){document.getElementById('gym-records').innerHTML='<div style="font-size:12px;color:#999;text-align:center;padding:10px">Sin récords aún.</div>';return;}var grupos=[{t:'💪 Pecho',ids:[0,1,2]},{t:'🦾 Tríceps',ids:[3,4,5]},{t:'🏋️ Espalda',ids:[6,7,8]},{t:'💪 Bíceps',ids:[9,10,11]},{t:'🦵 Piernas',ids:[12,13,14]},{t:'🏆 Hombros',ids:[15,16,17]}];var html='';grupos.forEach(function(g){html+='<div style="margin-bottom:10px"><div style="font-size:12px;font-weight:700;color:#666;margin-bottom:6px">'+g.t+'</div>';g.ids.forEach(function(i){var id=GYM_IDS[i];var val=gym[id]||0;var pct=maxP>0?Math.round((val/maxP)*100):0;html+='<div class="rec-item"><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:12px;font-weight:600">'+GYM_EJ[i]+'</span><span style="font-size:14px;font-weight:700;color:#1D9E75">'+(val||'—')+(val?' kg':'')+'</span></div>'+(val?'<div class="rec-bar"><div class="rec-fill" style="width:'+pct+'%"></div></div>':'')+'</div>';});html+='</div>';});document.getElementById('gym-records').innerHTML=html;}
+function guardarGym(){if(!perfil.gym)perfil.gym={};GYM_IDS.forEach(function(id){var val=parseFloat(document.getElementById(id).value);if(val)perfil.gym[id]=val;});localStorage.setItem('fit35_perfil',JSON.stringify(perfil));var ok=document.getElementById('gym-ok');ok.classList.add('show');setTimeout(function(){ok.classList.remove('show');document.getElementById('gym-form').style.display='none';renderGymRec();},1500);}
+function renderHist(){var pesos=perfil.pesos||[];if(pesos.length<2){document.getElementById('hist-peso').innerHTML='<div style="font-size:12px;color:#999;text-align:center;padding:10px">Necesitas al menos 2 registros.</div>';}else{var mn=Math.min.apply(null,pesos.map(function(p){return p.valor;}));var mx=Math.max.apply(null,pesos.map(function(p){return p.valor;}));var rng=mx-mn||1;document.getElementById('hist-peso').innerHTML=pesos.slice(-8).reverse().map(function(p,i,arr){var prev=arr[i+1];var diff=prev?(p.valor-prev.valor):0;var pct=Math.round(((p.valor-mn)/rng)*80)+10;return '<div class="hist-item"><div style="font-size:11px;color:#999;min-width:65px">'+p.fecha+'</div><div style="font-size:14px;font-weight:700">'+p.valor+'kg <span style="font-size:11px;color:'+(diff<0?'#A32D2D':diff>0?'#1D9E75':'#999')+'">'+(diff!==0?(diff>0?'▲':'▼')+Math.abs(diff).toFixed(1):'—')+'</span></div><div class="hist-bar"><div class="hist-fill" style="width:'+pct+'%"></div></div></div>';}).join('');}var medidas=perfil.medidas||[];if(medidas.length<2){document.getElementById('hist-med').innerHTML='<div style="font-size:12px;color:#999;text-align:center;padding:10px">Necesitas al menos 2 registros de medidas.</div>';}else{var primera=medidas[0];var ultima=medidas[medidas.length-1];document.getElementById('hist-med').innerHTML='<div style="font-size:12px;color:#666;margin-bottom:8px">'+primera.fecha+' → '+ultima.fecha+'</div>'+['pecho','cintura','cadera','brazo','muslo'].map(function(c,i){var ini=primera[c];var fin=ultima[c];if(!ini||!fin)return '';var diff=(fin-ini).toFixed(1);return '<div class="prog-item"><div>'+['Pecho','Cintura','Cadera','Brazo','Muslo'][i]+'</div><div style="text-align:right"><div style="font-size:13px;font-weight:600;color:#1D9E75">'+fin+' cm</div><div style="font-size:10px;color:'+(parseFloat(diff)<0?'#1D9E75':'#A32D2D')+'">'+(parseFloat(diff)>0?'+':'')+diff+' cm</div></div></div>';}).filter(Boolean).join('');}}
+function showUtab(tab,btn){document.querySelectorAll('.usec').forEach(function(x){x.classList.remove('act');});document.getElementById('ut-'+tab).classList.add('act');document.querySelectorAll('.utab').forEach(function(x){x.classList.remove('act');});btn.classList.add('act');}
+function scrollNav(amount){
+  var nav=document.getElementById('navbar');
+  if(!nav) return;
+  nav.scrollBy({left: amount, behavior: 'smooth'});
+}
+
+// Scroll horizontal con rueda del ratón en el nav (para computadora)
+document.addEventListener('DOMContentLoaded', function(){
+  var nav = document.getElementById('navbar');
+  if(nav){
+    nav.addEventListener('wheel', function(e){
+      if(e.deltaY !== 0){
+        e.preventDefault();
+        nav.scrollLeft += e.deltaY;
+      }
+    }, {passive: false});
+  }
+});
+</script>
+</body>
+</html>
